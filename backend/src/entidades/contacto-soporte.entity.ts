@@ -18,7 +18,7 @@ export class ContactoSoporte {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.contactosSoporte, { eager: true, onDelete: 'CASCADE' })
+  @ManyToOne(() => Usuario, (usuario) => usuario.contactoSoportes, { eager: true, onDelete: 'CASCADE' })
   usuario: Usuario;
 
   @CreateDateColumn()
