@@ -87,6 +87,13 @@ export class Usuario {
 
   @Column({ type: 'timestamp', nullable: true })
   expiracionTokenRecuperacion: Date | null;
+  
+
+  @Column({ type: 'varchar', nullable: true })
+  tokenVerificacionCorreo: string | null;
+
+  @Column({ type: 'boolean', default: false })
+  correoConfirmado: boolean;
 
   @Column({ nullable: true })
   fotoPerfil?: string;
@@ -98,10 +105,13 @@ export class Usuario {
   certificados: Certificado[];
 
   @OneToMany(() => ContactoSoporte, (contacto) => contacto.usuario)
-  contactosSoporte: ContactoSoporte[];
+  contactoSoportes: ContactoSoporte[];
 
-  @OneToMany(() => EquipoEmpresaMiembro, (equipo) => equipo.usuario)
-  equipos: EquipoEmpresaMiembro[];
+  @OneToMany(
+    () => EquipoEmpresaMiembro,
+    (equipoEmpresaMiembro) => equipoEmpresaMiembro.usuario,
+  )
+  equiposEmpresaMiembros: EquipoEmpresaMiembro[];
 
   @OneToMany(() => Inscripcion, (inscripcion) => inscripcion.usuario)
   inscripciones: Inscripcion[];

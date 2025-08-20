@@ -27,7 +27,6 @@ export class MailService {
 
   /**
    * Envía un correo de recibo de compra al cliente.
-   * Ahora usa el MailerService inyectado.
    */
   async sendPurchaseReceiptToCustomer(
     userEmail: string,
@@ -61,54 +60,57 @@ export class MailService {
 
   /**
    * Envía un correo de notificación de compra al administrador.
-   * Ahora usa el MailerService inyectado.
    */
   async sendPurchaseNotificationToAdmin(data: PurchaseNotificationData): Promise<void> {
     try {
       await this.mailerService.sendMail({
         to: this.configService.get<string>('EMAIL_USER'),
-        subject: `Nueva compra realizada por ${data.userName}`,
-        template: 'admin-purchase-notification',
+        subject: `Nueva compra de ${data.userName} - ${data.courseTitle}`,
+        template: 'purchase-notification-admin',
         context: {
-          userName: data.userName,
-          userEmail: data.userEmail,
-          courseTitle: data.courseTitle,
-          paymentAmount: data.paymentAmount,
-          orderId: data.orderId,
-          transactionId: data.transactionDetails?.id ?? '',
-          purchaseDate: data.transactionDetails?.create_time ?? '',
-          tipoUsuario: data.tipoUsuario,
-          listaCursos: data.cursosComprados,
-          totalCursosComprados: data.totalComprados,
-          porcentajeCursosComprados: data.porcentajeComprados.toFixed(2),
+          ...data,
           currentYear: new Date().getFullYear(),
         },
       });
-      this.logger.log(`Notificación de compra enviada al administrador.`);
+      this.logger.log(`Notificación de compra enviada al administrador`);
     } catch (error) {
-      this.logger.error('Error al enviar la notificación al administrador:', error.message, error.stack);
+      this.logger.error('Error al enviar la notificación de compra:', error.message, error.stack);
     }
   }
 
-  /**
-   * Envía un correo de recuperación de contraseña al usuario.
-   * Ahora usa el MailerService inyectado.
-   */
+  async sendVerificationEmail(to: string, nombre: string, enlace: string): Promise<void> {
+    try {
+      await this.mailerService.sendMail({
+        to: to,
+        subject: 'Verifica tu cuenta de BaraCreativa',
+        template: 'verificacion-correo',
+        context: {
+          nombre,
+          enlace,
+        },
+      });
+      this.logger.log(`Correo de verificación enviado a: ${to}`);
+    } catch (error) {
+      this.logger.error('Error al enviar el correo de verificación:', error.message, error.stack);
+      throw new InternalServerErrorException('No se pudo enviar el correo de verificación.');
+    }
+  }
+
   async sendPasswordRecoveryEmailToUser(
     userEmail: string,
     userName: string,
-    recoveryCode: string,
-    resetUrl: string,
+    token: string,
+    enlace: string,
   ): Promise<void> {
     try {
       await this.mailerService.sendMail({
         to: userEmail,
-        subject: 'Recuperación de contraseña',
-        template: 'password-recovery-user',
+        subject: `Recuperación de Contraseña`,
+        template: 'password-recovery',
         context: {
-          userName,
-          recoveryCode,
-          resetUrl,
+          nombre: userName,
+          token: token,
+          enlace: enlace,
           currentYear: new Date().getFullYear(),
         },
       });
@@ -119,11 +121,6 @@ export class MailService {
     }
   }
 
-  /**
-   * Envía un correo de notificación de recuperación al administrador.
-   * Nota: Para esta función, no tienes una plantilla .hbs,
-   * por lo que usamos el 'html' en línea, como en tu código original.
-   */
   async sendPasswordRecoveryNotificationToAdmin(
     adminEmail: string,
     userEmail: string,
@@ -148,7 +145,7 @@ export class MailService {
       });
       this.logger.log(`Notificación de recuperación enviada al administrador: ${adminEmail}`);
     } catch (error) {
-      this.logger.error('Error al enviar notificación al administrador:', error.message, error.stack);
+      this.logger.error('Error al enviar la notificación de recuperación:', error.message, error.stack);
     }
   }
 }
