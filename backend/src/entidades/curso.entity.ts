@@ -67,11 +67,9 @@ export class Curso {
   @Column({ nullable: true })
   pdfCurso?: string;
 
-
   @Column({ type: 'date', nullable: true })
   fechaInicio?: Date;
 
- 
   @OneToMany(() => ModuloEntity, (modulo) => modulo.curso, { cascade: true, eager: true })
   modulos: ModuloEntity[];
 
@@ -83,6 +81,7 @@ export class Curso {
 
   @OneToMany(() => Certificado, (certificado) => certificado.curso)
   certificados: Certificado[];
+
 
   @OneToMany(() => EquipoEmpresaMiembro, (equipo) => equipo.curso)
   equiposAsignados: EquipoEmpresaMiembro[];

@@ -1,31 +1,27 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  Column,
-  CreateDateColumn,
-} from 'typeorm';
-
+import { Entity, PrimaryGeneratedColumn, ManyToOne, Column } from 'typeorm';
 import { Usuario } from './usuario.entity';
-import { Curso } from './curso.entity';
+import { Curso } from './curso.entity'; 
+export enum TipoMiembro {
+  Admin = 'admin',
+  Miembro = 'miembro',
+}
 
 @Entity('equipo_empresa')
 export class EquipoEmpresaMiembro {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.equipos, { onDelete: 'CASCADE' })
-  usuario: Usuario;
+  @ManyToOne(() => Usuario, (usuario) => usuario.equiposEmpresaMiembros, { onDelete: 'CASCADE' })
+  miembro: Usuario;
 
-  @ManyToOne(() => Curso, (curso) => curso.equiposAsignados, { nullable: true, onDelete: 'SET NULL' })
-  curso: Curso;
 
-  @Column()
-  nombreEquipo: string;
+  @ManyToOne(() => Curso, (curso) => curso.equiposAsignados, { onDelete: 'CASCADE' })
+  curso: Curso; 
 
-  @Column()
-  rol: string;
-
-  @CreateDateColumn()
-  creadoEn: Date;
+  @Column({
+    type: 'enum',
+    enum: TipoMiembro,
+    default: TipoMiembro.Miembro,
+  })
+  tipoMiembro: TipoMiembro;
 }

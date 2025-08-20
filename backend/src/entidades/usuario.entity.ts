@@ -107,9 +107,10 @@ export class Usuario {
   @OneToMany(() => ContactoSoporte, (contacto) => contacto.usuario)
   contactoSoportes: ContactoSoporte[];
 
+  
   @OneToMany(
     () => EquipoEmpresaMiembro,
-    (equipoEmpresaMiembro) => equipoEmpresaMiembro.usuario,
+    (equipoEmpresaMiembro) => equipoEmpresaMiembro.miembro,
   )
   equiposEmpresaMiembros: EquipoEmpresaMiembro[];
 
