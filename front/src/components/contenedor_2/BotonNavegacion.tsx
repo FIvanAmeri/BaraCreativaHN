@@ -10,9 +10,9 @@ export const BotonNavegacion = ({ direccion, onClick }: Props) => {
   return (
     <button
       onClick={onClick}
-      className={`absolute ${esIzquierda ? "left-1 sm:left-4" : "right-1 sm:right-4"} top-1/2 transform -translate-y-1/2 z-30 bg-white p-1 sm:p-2 rounded-full shadow`}
+      className={`absolute ${esIzquierda ? "left-6" : "right-4"} -mt-[100px] top-1/2 transform -translate-y-1/2 z-30 bg-white p-2 rounded-full shadow`}
     >
-      {esIzquierda ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
+      {esIzquierda ? <ChevronLeft size={24} /> : <ChevronRight size={24} />}
     </button>
   );
 };

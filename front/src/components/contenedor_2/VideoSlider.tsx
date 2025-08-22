@@ -15,11 +15,11 @@ const BotonNavegacion = ({
   <button
     onClick={onClick}
     className={`absolute top-1/2 -translate-y-1/2 ${
-      direccion === "izquierda" ? "left-4" : "right-4"
-    } bg-white rounded-full shadow-md w-12 h-12 flex items-center justify-center hover:scale-110 transition z-30`}
+      direccion === "izquierda" ? "left-3" : "right-3"
+    } bg-white rounded-full shadow-md w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center hover:scale-110 transition z-30`}
     aria-label={`Ir ${direccion === "izquierda" ? "anterior" : "siguiente"}`}
   >
-    <span className="text-2xl font-bold text-gray-700">
+    <span className="text-xl sm:text-2xl font-bold text-gray-700">
       {direccion === "izquierda" ? "←" : "→"}
     </span>
   </button>
@@ -36,21 +36,17 @@ const VideoSlider = () => {
   }, [indiceActual]);
 
   return (
-    <div className="relative w-full max-w-[500px] mx-auto flex flex-col items-center justify-center">
-      {/* Título */}
-      <div className="w-full text-center py-3 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-600 text-white font-semibold rounded-t-lg select-none text-xl">
+    <div className="relative w-full max-w-3xl mx-auto flex flex-col items-center justify-center">
+      <div className="w-full text-center py-3 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-600 text-white font-semibold rounded-t-lg select-none text-lg sm:text-xl">
         {videosDeTestimonios[indiceActual].name}
       </div>
 
-      {/* Contenedor de video con aspecto 16:9 */}
-      <div className="relative w-full rounded-lg aspect-video">
+
+      <div className="relative w-full aspect-video rounded-lg overflow-hidden">
         {videosDeTestimonios.map(
           ({ src }, index) =>
             index === indiceActual && (
-              <div
-                key={src}
-                className="absolute z-20 inset-0 scale-100 opacity-100"
-              >
+              <div key={src} className="absolute inset-0">
                 <VideoActivo
                   src={src}
                   reproduciendo={estaReproduciendo}
@@ -61,7 +57,6 @@ const VideoSlider = () => {
             )
         )}
 
-        {/* Botones de navegación */}
         <BotonNavegacion
           direccion="izquierda"
           onClick={() => {
