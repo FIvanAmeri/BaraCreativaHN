@@ -2,7 +2,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 
-export default function BotonNosotros() {
+export default function SobreComunidadButton() {
   const router = useRouter();
 
   const handleClick = () => {
@@ -18,8 +18,8 @@ export default function BotonNosotros() {
         hover:text-white duration-1000 rounded-[1.25rem]
         py-2 sm:py-3
         px-3 sm:px-4
-        text-[clamp(0.75rem,2vw,1.25rem)]
-        w-fit min-w-[6rem] max-w-[13rem]
+        text-[clamp(0.65rem,1.5vw,1rem)] tracking-tight
+        w-fit min-w-[6rem] max-w-[16rem]
       "
     >
       <span className="absolute bg-yellow-300 w-44 h-36 rounded-full group-hover:scale-100 scale-0 -z-10 -left-2 -top-10 group-hover:duration-500 duration-700 origin-center transform transition-all"></span>
