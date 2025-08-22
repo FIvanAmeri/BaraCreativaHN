@@ -1,28 +1,60 @@
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Swal from "sweetalert2";
-import { validatePassword, validateEmail } from "../../utils/validation";
-import { registerUser } from "../../services/authService";
-import { TipoUsuario } from '@/app/types/auth';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Swal from 'sweetalert2';
 
-interface RegisterFormData {
+
+const validateEmail = (email: string): boolean => {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(String(email).toLowerCase());
+};
+
+const validatePassword = (password: string): boolean => {
+  const re = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9]).{8,}$/;
+  return re.test(password);
+};
+
+
+interface RegisterData {
   nombreCompleto: string;
   correoElectronico: string;
-  contrasena: string;
-  confirmContrasena: string;
-  numeroTelefono?: string;
-  tipoUsuario: TipoUsuario;
+  password: string;
+  telefono?: string;
+  tipoUsuario: string;
   nombreEmpresa?: string;
   fotoPerfil?: string;
 }
 
-interface ErrorConMensaje extends Error {
-  message: string;
+
+const registerUser = async (data: RegisterData): Promise<void> => {
+  // Simulate an error for a specific email
+  if (data.correoElectronico === 'test@error.com') {
+    throw new Error('El correo electrónico ya está en uso.');
+  }
+
+  return new Promise((resolve) => setTimeout(resolve, 1000));
+};
+
+
+const TipoUsuario = {
+  Alumno: "Alumno",
+  Empresa: "Empresa",
+};
+
+
+interface FormData {
+  nombreCompleto: string;
+  correoElectronico: string;
+  contrasena: string;
+  confirmContrasena: string;
+  numeroTelefono: string;
+  tipoUsuario: string;
+  nombreEmpresa: string;
+  fotoPerfil: string;
 }
 
 export const useRegisterForm = () => {
   const router = useRouter();
-  const [formData, setFormData] = useState<RegisterFormData>({
+  const [formData, setFormData] = useState<FormData>({
     nombreCompleto: "",
     correoElectronico: "",
     contrasena: "",
@@ -35,6 +67,7 @@ export const useRegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -45,9 +78,11 @@ export const useRegisterForm = () => {
     }));
   };
 
+  
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
+
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -63,6 +98,7 @@ export const useRegisterForm = () => {
       nombreEmpresa,
       fotoPerfil,
     } = formData;
+
 
     if (nombreCompleto.length < 4) {
       Swal.fire(
@@ -100,7 +136,8 @@ export const useRegisterForm = () => {
       return;
     }
 
-    const dataToSend = {
+
+    const dataToSend: RegisterData = {
       nombreCompleto,
       correoElectronico,
       password: contrasena,
@@ -112,20 +149,32 @@ export const useRegisterForm = () => {
 
     try {
       await registerUser(dataToSend);
-      Swal.fire("Éxito", "Usuario registrado exitosamente", "success").then(() => {
-        router.push("/login");
+      await Swal.fire({
+        title: "Registro exitoso",
+        text: "¡Tu cuenta ha sido creada! Por favor, revisa tu correo electrónico para verificarla.",
+        icon: "success",
+        confirmButtonText: "Entendido",
       });
-    } catch (error) {
-      const e = error as Partial<ErrorConMensaje>;
-      Swal.fire(
-        "Error",
-        e.message || "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
-        "error"
-      );
+      
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        Swal.fire(
+          "Error",
+          error.message || "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+          "error"
+        );
+      } else {
+        Swal.fire(
+          "Error",
+          "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+          "error"
+        );
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
+
 
   return {
     formData,

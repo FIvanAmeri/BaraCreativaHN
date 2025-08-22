@@ -17,7 +17,7 @@ import { AuthService } from '../../services/auth/auth.service';
 import { UsuariosService } from '../../services/usuarios/usuarios.service';
 import { Usuario } from '../../entidades/usuario.entity';
 import { SocketGateway } from '../../socket/socket.gateway';
-import { SolicitarResetDto } from '../../dto/password/solicitar-reset.dto'; 
+import { SolicitarResetDto } from '../../dto/password/solicitar-reset.dto';
 import { ResetPasswordDto } from '../../dto/password/reset-password.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CreateUsuarioDto } from '../../dto/crear-editar-usuarios/create-usuario.dto';
@@ -37,7 +37,10 @@ export class AuthController {
   @Post('registro')
   @HttpCode(HttpStatus.CREATED)
   async registro(@Body() datos: CreateUsuarioDto) {
-    return this.authService.registrarUsuario(datos);
+    await this.authService.registrarUsuario(datos);
+    return {
+      message: 'Registro exitoso. Por favor, valida tu correo electrónico para activar tu cuenta.',
+    };
   }
 
   @Post('login')
