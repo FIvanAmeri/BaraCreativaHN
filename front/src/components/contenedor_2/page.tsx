@@ -3,11 +3,10 @@
 import React from "react";
 import VideoSlider from "@/components/contenedor_2/VideoSlider";
 import ContenedorDeTestimonios from "@/components/contenedor_2/contenedorDeTestimonios";
-import { useTamanoPantalla } from '../../app/hooks/testimonios/useTamanoPantalla';
+import { useTamanoPantalla } from '@/app/hooks/testimonios/useTamanoPantalla';
 
 const HeavyComponent = () => {
   const tamanoPantalla = useTamanoPantalla();
-
 
   return (
     <div

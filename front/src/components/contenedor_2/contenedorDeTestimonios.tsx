@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { testimoniosDeUsuarios } from "@/app/testimonios/testimoniosDeUsuarios";
+import { testimoniosDeUsuarios } from "../../app/testimonios/testimoniosDeUsuarios";
 import { motion, AnimatePresence } from "framer-motion";
 
 const ContenedorDeTestimonios = () => {
@@ -25,7 +25,7 @@ const ContenedorDeTestimonios = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -50 }}
           transition={{ duration: 0.6 }}
-          className="flex bg-orange-100 text-orange-900 rounded-lg shadow-lg p-3 sm:p-4 gap-3 sm:gap-4 w-full h-full"
+          className="flex bg-orange-100 text-orange-900 rounded-lg shadow-lg p-3 sm:p-4 gap-3 sm:gap-4 w-full"
         >
           <img
             src={testimonio.imagen}
