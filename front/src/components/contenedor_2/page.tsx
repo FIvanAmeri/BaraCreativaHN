@@ -1,20 +1,18 @@
 "use client";
 
 import React from "react";
-import VideoSlider from "../contenedor_2/VideoSlider";
+import VideoSlider from "./VideoSlider";
 import ContenedorDeTestimonios from "./contenedorDeTestimonios";
 
-const HeavyComponent = () => {
+const Contenedor_2 = () => {
   return (
-    <div className="w-full max-w-6xl mx-auto bg-gray-200 rounded-lg p-4 flex flex-col gap-6 overflow-y-auto min-h-[80vh]">
-      <div className="w-full">
-        <VideoSlider />
-      </div>
-      <div className="w-full">
+    <div className="w-full h-full flex flex-col rounded-lg bg-gray-200 p-4 gap-6">
+      <VideoSlider />
+      <div className="flex-1 flex">
         <ContenedorDeTestimonios />
       </div>
     </div>
   );
 };
 
-export default HeavyComponent;
+export default Contenedor_2;

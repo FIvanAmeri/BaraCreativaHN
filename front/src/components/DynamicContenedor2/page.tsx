@@ -2,9 +2,8 @@
 
 import dynamic from "next/dynamic";
 
-
 const Contenedor_2 = dynamic(() => import("@/components/contenedor_2/page"), {
-  loading: () => <p>Cargando contenido pesado...</p>,
+  loading: () => <p>Cargando contenido...</p>,
   ssr: false,
 });
 

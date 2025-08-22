@@ -1,3 +1,5 @@
+"use client";
+
 import PhotoCarousel from "@/components/slice/page";
 import Contenedor_1 from "@/components/contenedor_1/page";
 import DynamicContenedor2 from "@/components/DynamicContenedor2/page";
@@ -10,7 +12,7 @@ export default function Home() {
   return (
     <div className="bg-[var(--background)] font-sans text-white">
       {/* Carrusel de fotos */}
-      <div className="">
+      <div>
         <PhotoCarousel />
       </div>
 
@@ -26,11 +28,11 @@ export default function Home() {
       </section>
 
       {/* Sección de los dos contenedores */}
-      <section className="container mx-auto py-8 flex flex-col md:flex-row gap-4 justify-center items-stretch">
-        <div className="w-full md:w-1/2">
+      <section className="container mx-auto py-8 flex flex-col md:flex-row gap-4 items-stretch">
+        <div className="w-full md:w-1/2 flex">
           <Contenedor_1 />
         </div>
-        <div className="w-full md:w-1/2">
+        <div className="w-full md:w-1/2 flex">
           <DynamicContenedor2 />
         </div>
       </section>
