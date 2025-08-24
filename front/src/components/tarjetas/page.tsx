@@ -17,11 +17,11 @@ const Card: React.FC<CardProps> = ({
   onButtonClick,
 }) => {
   return (
-    <div className="w-full overflow-hidden">
-      <div className="relative w-full aspect-video">
+    <div className="w-full overflow-hidden flex flex-col h-full">
+      <div className="relative w-full aspect-[3/2]">
         <Image src={image} alt={title} fill className="object-cover" />
       </div>
-      <div className="mt-0 px-4 py-3 bg-black bg-opacity-40 backdrop-blur-sm">
+      <div className="mt-0 px-4 py-3 bg-black bg-opacity-40 backdrop-blur-sm flex-grow">
         <h3 className="text-white text-xl font-semibold mb-1">{title}</h3>
         <p className="text-white text-sm">{description}</p>
         {buttonText && onButtonClick && (
