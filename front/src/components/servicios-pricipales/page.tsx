@@ -5,20 +5,17 @@ const services = [
   {
     title: "PROYECTOS DE CAPACITACION EMPRESARIAL",
     image: "/foto-servicio.png",
-    description:
-      "Soluciones personalizadas para mejorar las habilidades de tu equipo.",
+    description: "Soluciones personalizadas para mejorar las habilidades de tu equipo.",
   },
   {
-    title: "DESSARROLLO DE PROYECTOS E LAEARNING BC",
+    title: "DESARROLLO DE PROYECTOS E-LEARNING BC",
     image: "/desarrollo-de-proyectos-e-learning-bc.png",
-    description:
-      "Asesoría para optimizar programas de aprendizaje y e-learning.",
+    description: "Asesoría para optimizar programas de aprendizaje y e-learning.",
   },
   {
     title: "COACHING EDUCATIVO BC",
     image: "/coaching-educativo-bc.png",
-    description:
-      "Creación de materiales educativos interactivos y de alto impacto.",
+    description: "Creación de materiales educativos interactivos y de alto impacto.",
   },
 ];
 
