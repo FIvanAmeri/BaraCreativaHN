@@ -3,7 +3,6 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/context/AuthContext";
-import BotonConEfecto from "../Botones/BotonConEfecto";
 
 interface MobileMenuUserProps {
   isProfileOpen: boolean;
@@ -33,6 +32,7 @@ const MobileMenuUser: React.FC<MobileMenuUserProps> = ({
 
   const profileImageUrl = usuario ? getProfileImageUrl(usuario.fotoPerfil) : null;
 
+
   if (cargandoUsuario) {
     return (
       <div className="px-4 py-2 rounded-lg font-medium text-white bg-gray-400 animate-pulse whitespace-nowrap w-full max-w-sm text-center">
@@ -42,12 +42,9 @@ const MobileMenuUser: React.FC<MobileMenuUserProps> = ({
   }
 
   if (!usuario) {
-    return (
-      <div className="w-full max-w-sm" onClick={() => setIsMenuOpen(false)}>
-        <BotonConEfecto texto="Acceso" href="/login" className="w-full" />
-      </div>
-    );
+    return null;
   }
+
 
   return (
     <div
@@ -70,6 +67,7 @@ const MobileMenuUser: React.FC<MobileMenuUserProps> = ({
           </div>
         )}
       </button>
+
       <div
         className={`${
           isProfileOpen ? "opacity-100 visible" : "opacity-0 invisible"
@@ -87,6 +85,7 @@ const MobileMenuUser: React.FC<MobileMenuUserProps> = ({
         >
           Perfil
         </button>
+
         <button
           onClick={() => {
             cerrarSesion();
