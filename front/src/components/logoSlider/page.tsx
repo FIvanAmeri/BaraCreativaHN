@@ -35,7 +35,7 @@ const LogoSlider = () => {
   return (
     <section className="container mx-auto py-8 bg-[var(--background)] text-white">
       <h2 className="text-2xl font-bold text-center mb-6">
-        Clientes con las que hemos trabajado
+        Clientes con los que hemos trabajado
       </h2>
       <Swiper
         slidesPerView={2}

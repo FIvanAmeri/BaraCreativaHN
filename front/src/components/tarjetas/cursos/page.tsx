@@ -1,8 +1,8 @@
 "use client"
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image'; // Importa Image si lo estás usando
-import { Curso } from '@/app/types/curso'; // Importa la interfaz Curso
+import Image from 'next/image';
+import { Curso } from '@/app/types/curso';
 
 interface CardsListProps {
   cursos: Curso[];
@@ -19,17 +19,21 @@ export default function CardsList({ cursos }: CardsListProps) {
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 sm:px-6 lg:px-8">
       {cursos.map((curso) => {
         const urlImagen = curso.imagenCurso
-          ? `${backendBaseUrl}/uploads/imagenes-cursos/${curso.imagenCurso}` // Usamos la variable de entorno aquí
+          ? `${backendBaseUrl}/uploads/imagenes-cursos/${curso.imagenCurso}`
           : 'https://placehold.co/400x200/cccccc/333333?text=Sin+Imagen';
+
         return (
           <Link href={`/cursos/${curso.id}`} key={curso.id} className="block">
             <div className="border rounded-lg shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
               {curso.imagenCurso ? (
-              <img
-                  src={urlImagen}
-                  alt={curso.titulo}
-                  className="w-full h-48 object-cover"
-                />
+                <div className="relative w-full h-48">
+                  <Image
+                    src={urlImagen}
+                    alt={curso.titulo}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
               ) : (
                 <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
                   <span className="text-gray-500">Sin imagen</span>
