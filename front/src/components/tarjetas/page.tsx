@@ -18,7 +18,8 @@ const Card: React.FC<CardProps> = ({
 }) => {
   return (
     <div className="w-full overflow-hidden flex flex-col h-full">
-      <div className="relative w-full aspect-[3/2]">
+      
+      <div className="relative w-full aspect-[16/9]">
         <Image src={image} alt={title} fill className="object-cover" />
       </div>
       <div className="mt-0 px-4 py-3 bg-black bg-opacity-40 backdrop-blur-sm flex-grow">
