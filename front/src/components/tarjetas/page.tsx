@@ -18,7 +18,7 @@ const Card: React.FC<CardProps> = ({
 }) => {
   return (
     <div className="w-full overflow-hidden">
-      <div className="w-full h-64 relative">
+      <div className="relative w-full aspect-video">
         <Image src={image} alt={title} fill className="object-cover" />
       </div>
       <div className="mt-0 px-4 py-3 bg-black bg-opacity-40 backdrop-blur-sm">

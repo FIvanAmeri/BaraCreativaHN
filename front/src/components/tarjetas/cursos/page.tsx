@@ -26,7 +26,7 @@ export default function CardsList({ cursos }: CardsListProps) {
           <Link href={`/cursos/${curso.id}`} key={curso.id} className="block">
             <div className="border rounded-lg shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
               {curso.imagenCurso ? (
-                <div className="relative w-full h-48">
+                <div className="relative w-full aspect-video">
                   <Image
                     src={urlImagen}
                     alt={curso.titulo}
