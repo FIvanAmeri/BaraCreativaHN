@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import BarraBusqueda from "../BarraBusqueda/barrabusqueda";
 import MobileMenuNav from "./MobileMenuNav";
 import MobileMenuUser from "./MobileMenuUser";
 
@@ -28,10 +27,6 @@ export default function MobileMenu({
     <div className="lg:hidden absolute top-full left-0 w-full bg-gray-900 backdrop-blur z-50 p-4">
       <div className="flex flex-col items-center space-y-4">
         <MobileMenuNav onClose={() => setIsMenuOpen(false)} />
-
-
-        <BarraBusqueda className="w-full max-w-sm" />
-
 
         <MobileMenuUser
           isProfileOpen={isProfileOpen}

@@ -24,6 +24,7 @@ const MobileMenuNav: React.FC<MobileMenuNavProps> = ({ onClose }) => {
         <BotonConEfecto texto="Acceso" href="/login" className="w-full" />
       </MobileMenuItem>
 
+ 
       <MobileMenuItem onClick={onClose}>
         <ComunidadButton />
       </MobileMenuItem>
@@ -38,7 +39,7 @@ const MobileMenuNav: React.FC<MobileMenuNavProps> = ({ onClose }) => {
         <Contactenos />
       </MobileMenuItem>
 
-
+   
       <div className="col-span-2">
         <BarraBusqueda className="w-full" />
       </div>
