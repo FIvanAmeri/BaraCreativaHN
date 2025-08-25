@@ -4,8 +4,9 @@ import { LienzoTexto } from "./LienzoTexto";
 export const LienzoCompleto = () => {
   return (
     <>
-      <LienzoPintado />
-      <LienzoTexto />
+      <LienzoPintado>
+        <LienzoTexto />
+      </LienzoPintado>
     </>
   );
 };

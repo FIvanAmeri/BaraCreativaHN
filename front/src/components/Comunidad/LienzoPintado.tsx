@@ -1,8 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { ReactNode } from "react";
 
-export const LienzoPintado = () => {
+interface Props {
+  children: ReactNode;
+}
+
+export const LienzoPintado = ({ children }: Props) => {
   return (
     <motion.div
       initial={{ opacity: 0, scaleX: 0 }}
@@ -10,7 +15,7 @@ export const LienzoPintado = () => {
       transition={{ duration: 1.5, ease: "easeOut" }}
       style={{
         position: "fixed",
-        bottom: "50px", 
+        bottom: "50px",
         width: "80%",
         height: "200px",
         backgroundColor: "rgba(100, 100, 100, 0.3)",
@@ -20,6 +25,7 @@ export const LienzoPintado = () => {
         zIndex: 40,
       }}
     >
+      {children}
     </motion.div>
   );
 };
