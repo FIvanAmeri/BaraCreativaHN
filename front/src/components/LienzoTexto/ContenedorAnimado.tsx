@@ -8,7 +8,7 @@ interface Props {
 export const ContenedorAnimado: React.FC<Props> = ({ children }) => {
   return (
     <motion.div
-      className="flex flex-col px-6 text-center text-white font-bold text-lg md:text-2xl whitespace-normal pointer-events-auto"
+      className="flex flex-col px-6 text-center text-white font-bold text-lg md:text-2xl whitespace-normal pointer-events-auto -mt-16"
       style={{
         lineHeight: 1.5,
         textShadow: "0 0 5px rgba(0,0,0,0.8)",
