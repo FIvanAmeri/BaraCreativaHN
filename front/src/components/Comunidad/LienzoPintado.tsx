@@ -10,7 +10,7 @@ export const LienzoPintado = () => {
       transition={{ duration: 1.5, ease: "easeOut" }}
       style={{
         position: "fixed",
-        bottom: 0,
+        bottom: "50px", 
         width: "80%",
         height: "200px",
         backgroundColor: "rgba(100, 100, 100, 0.3)",
