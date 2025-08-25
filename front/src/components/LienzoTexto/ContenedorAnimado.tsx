@@ -8,7 +8,7 @@ interface Props {
 export const ContenedorAnimado: React.FC<Props> = ({ children }) => {
   return (
     <motion.div
-      className="flex flex-col px-6 text-center text-white font-bold text-lg md:text-2xl whitespace-normal pointer-events-auto -mt-16"
+      className="flex flex-col px-6 text-center text-white font-bold text-lg md:text-2xl whitespace-normal pointer-events-auto"
       style={{
         lineHeight: 1.5,
         textShadow: "0 0 5px rgba(0,0,0,0.8)",
@@ -16,6 +16,7 @@ export const ContenedorAnimado: React.FC<Props> = ({ children }) => {
         overflowWrap: "normal",
         wordBreak: "normal",
         hyphens: "auto",
+        transform: "translateY(-40px)",
       }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
