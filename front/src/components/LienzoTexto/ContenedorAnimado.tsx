@@ -16,7 +16,7 @@ export const ContenedorAnimado: React.FC<Props> = ({ children }) => {
         overflowWrap: "normal",
         wordBreak: "normal",
         hyphens: "auto",
-        transform: "translateY(-40px)",
+        transform: "translateY(-80px)",
       }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
