@@ -5,7 +5,6 @@ import { AnimatePresence } from "framer-motion";
 import { TextoAnimado } from "./TextoAnimado";
 import { BotonAnimado } from "./BotonAnimado";
 import { useMostrar } from "@/app/hooks/useMostrar";
-import { ContenedorFijoCentrado } from "./ContenedorFijoCentrado";
 import { ContenedorAnimado } from "./ContenedorAnimado";
 
 export const LienzoTexto = () => {
@@ -14,17 +13,13 @@ export const LienzoTexto = () => {
   const texto = `¡Únete a la Comunidad Bara! Recibe recursos gratis, newsletter con tips disruptivos e invitación a eventos exclusivos. ¡Y accede a nuestro Telegram de profes y empresas innovadoras!`;
 
   return (
-    <div className="absolute bottom-[50px] w-full">
-      <ContenedorFijoCentrado>
-        <AnimatePresence>
-          {visible && (
-            <ContenedorAnimado>
-              <TextoAnimado texto={texto} />
-              <BotonAnimado />
-            </ContenedorAnimado>
-          )}
-        </AnimatePresence>
-      </ContenedorFijoCentrado>
-    </div>
+    <AnimatePresence>
+      {visible && (
+        <ContenedorAnimado>
+          <TextoAnimado texto={texto} />
+          <BotonAnimado />
+        </ContenedorAnimado>
+      )}
+    </AnimatePresence>
   );
 };
