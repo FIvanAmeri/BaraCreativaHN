@@ -6,7 +6,7 @@ interface Props {
 
 export const ContenedorFijoCentrado: React.FC<Props> = ({ children }) => {
   return (
-    <div className="relative w-full py-10"> 
+    <div className="relative w-full flex flex-col items-center justify-center p-4">
       {children}
     </div>
   );
