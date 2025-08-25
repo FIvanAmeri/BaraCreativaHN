@@ -24,6 +24,7 @@ export const LienzoPintado = ({ children }: Props) => {
         pointerEvents: "none",
         zIndex: 40,
       }}
+      className="flex items-center justify-center"
     >
       {children}
     </motion.div>
