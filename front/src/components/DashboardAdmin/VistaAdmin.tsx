@@ -23,7 +23,7 @@ const VistaAdmin: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-row min-h-screen">
+    <div className="flex flex-col md:flex-row min-h-screen">
       <MenuAdmin seleccionarVista={setVista} />
       <main className="flex-1 bg-white p-4">{renderVista()}</main>
     </div>
