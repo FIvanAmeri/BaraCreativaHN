@@ -18,6 +18,7 @@ import { randomUUID } from 'crypto';
 import { SolicitarResetDto } from '../../dto/password/solicitar-reset.dto';
 import { ConfirmarResetDto } from '../../dto/password/confirmar-reset.dto';
 import { CreateUsuarioDto } from '../../dto/crear-editar-usuarios/create-usuario.dto';
+import { SocketGateway } from '../../socket/socket.gateway';
 
 @Injectable()
 export class AuthService {
@@ -31,6 +32,7 @@ export class AuthService {
     private readonly userRepository: Repository<Usuario>,
     private readonly mailService: MailService,
     private readonly configService: ConfigService<AppConfig>,
+    private readonly socketGateway: SocketGateway,
   ) {
     const emailUserConfig = this.configService.get('email.user', { infer: true });
     if (!emailUserConfig) {
@@ -109,6 +111,11 @@ export class AuthService {
     if (!usuario.correoConfirmado) {
       throw new UnauthorizedException('Por favor, confirma tu correo electrónico para poder iniciar sesión.');
     }
+    
+    await this.usuariosService.actualizarEstado(usuario.id, true);
+    await this.usuariosService.actualizarUltimaSesion(usuario.id, new Date());
+    const usuarios = await this.usuariosService.findAll();
+    this.socketGateway.server.emit('usuariosActualizados', usuarios);
 
     const payload = { sub: usuario.id, correoElectronico: usuario.correoElectronico };
 

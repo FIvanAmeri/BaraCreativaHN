@@ -75,6 +75,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async logout(@Req() req: UserRequest, @Res({ passthrough: true }) res: Response) {
     await this.usuariosService.actualizarEstado(req.user.id, false);
+    await this.usuariosService.actualizarUltimaSesion(req.user.id, new Date());
     res.clearCookie('jwt', {
       path: '/',
       httpOnly: true,
