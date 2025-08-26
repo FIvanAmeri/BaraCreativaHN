@@ -6,7 +6,7 @@ interface Props {
 
 export default function MenuAdmin({ seleccionarVista }: Props) {
   return (
-    <nav className="w-48 bg-gray-100 p-4 flex flex-col space-y-4">
+    <nav className="flex flex-row overflow-x-auto md:flex-col md:p-4 md:space-y-4 w-full md:w-48 bg-gray-100 p-2 space-x-2 md:space-x-0">
       <button
         className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
         onClick={() => seleccionarVista('usuarios')}
