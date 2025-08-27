@@ -1,14 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Curso } from '@/app/types/curso';
-// No necesitamos los componentes ni el hook de SCORM en esta página
-// import { useCursoScorm } from '@/app/hooks/Scorm/useCursoScorm';
-// import ListaModulos from '@/components/Scorm/ListaModulos';
-// import NavegacionModulos from '@/components/Scorm/Navegacion';
+import { PanelTarjeta } from '@/components/ScormID/PanelTarjeta';
+import { FaPlay, FaMicrochip } from 'react-icons/fa'; 
+
 
 export default function CursosPage() {
-  // CAMBIO 1: El estado ahora guarda una lista de cursos.
   const [cursos, setCursos] = useState<Curso[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -24,8 +23,6 @@ export default function CursosPage() {
           throw new Error('Error al obtener la lista de cursos');
         }
         const fetchedCursos: Curso[] = await response.json();
-        
-        // CAMBIO 2: Guardamos la lista completa en el estado.
         setCursos(fetchedCursos);
         setError(null);
       } catch (err: unknown) {
@@ -42,50 +39,86 @@ export default function CursosPage() {
     fetchCursosData();
   }, []);
 
-  if (loading) return <div>Cargando cursos...</div>;
-  if (error) return <div>Error: {error}</div>;
-  
-  // CAMBIO 3: Si no hay cursos, mostramos un mensaje.
-  if (cursos.length === 0) return <div>No se encontraron cursos disponibles.</div>;
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-dark-bg text-accent-cyan">
+        <p className="text-xl animate-pulse">
+          <FaMicrochip className="inline-block animate-spin mr-2" />
+          Cargando datos interdimensionales...
+        </p>
+      </div>
+    );
+  }
 
-  // CAMBIO 4: Iteramos sobre la lista de cursos para mostrar las "tarjetas"
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-dark-bg text-accent-magenta text-center">
+        <div className="p-8 border border-border-glitch rounded-lg shadow-xl animate-fade-in-up">
+          <h2 className="text-2xl font-bold">Error al cargar cursos</h2>
+          <p className="mt-4 text-sm">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+
+  if (cursos.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-dark-bg text-text-light">
+        <p className="text-xl">No se encontraron cursos disponibles. ¡Creemos uno!</p>
+      </div>
+    );
+  }
+
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Cursos Disponibles</h1>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+    <div className="bg-dark-bg min-h-screen text-text-light py-16 px-4 md:px-8">
+      <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-center mb-12
+                     text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-magenta
+                     drop-shadow-cyber-glow-magenta animate-fade-in-up">
+        Catálogo de Programas
+      </h1>
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
         {cursos.map(curso => (
-          <div 
-            key={curso.id}
-            style={{
-              border: '1px solid #ccc',
-              borderRadius: '8px',
-              padding: '20px',
-              width: '300px', // Ajusta el ancho de las tarjetas
-              boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-            }}
-          >
-            {curso.imagenCurso && (
-              <img src={curso.imagenCurso} alt={`Imagen del curso ${curso.titulo}`} 
-                style={{ width: '100%', height: 'auto', borderRadius: '4px' }}
-              />
-            )}
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '10px' }}>{curso.titulo}</h2>
-            <p style={{ fontSize: '1rem', color: '#666' }}>{curso.descripcion}</p>
-            <p style={{ fontWeight: 'bold', marginTop: '10px' }}>Precio: ${curso.precio}</p>
-            <button 
-              style={{
-                marginTop: '15px',
-                padding: '10px 20px',
-                backgroundColor: '#0070f3',
-                color: 'white',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer'
-              }}
-            >
-              Ver Detalles
-            </button>
-          </div>
+          <PanelTarjeta key={curso.id} claseAdicional="w-full max-w-sm" conEfectoEscaneo>
+            <div className="flex flex-col items-center p-4">
+              {curso.imagenCurso && typeof curso.imagenCurso === 'string' && (
+                <div className="relative w-full h-48 mb-4">
+                  <img
+                    src={curso.imagenCurso}
+                    alt={`Imagen de ${curso.titulo}`}
+                    className="w-full h-full object-cover rounded-md border border-mid-dark-bg shadow-lg hover:border-accent-cyan transition-colors duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-dark-bg via-transparent to-transparent opacity-70 rounded-md"></div>
+                </div>
+              )}
+              <h2 className="text-xl md:text-2xl font-bold text-center mb-2 text-accent-cyan">
+                {curso.titulo}
+              </h2>
+              <p className="text-sm text-text-muted text-center mb-4 truncate w-full px-2">
+                {curso.descripcion}
+              </p>
+              
+              <div className="flex flex-col items-center w-full mt-auto">
+                <p className="font-semibold text-lg text-accent-lime mb-4">
+                  💲 Precio: <span className="text-text-light">${curso.precio}</span>
+                </p>
+                <Link href={`/cursos/${curso.id}`} passHref>
+                  <button className="relative w-full md:w-auto px-6 py-3 rounded-md bg-transparent border-2 border-accent-cyan text-text-light font-bold text-lg
+                                     uppercase tracking-wider overflow-hidden group
+                                     transition-colors duration-300">
+                    <span className="relative z-10 transition-colors duration-300 group-hover:text-dark-bg">
+                      Ver Detalles
+                    </span>
+                    <span className="absolute inset-0 bg-gradient-to-r from-accent-cyan to-accent-magenta transform scale-x-0
+                                     group-hover:scale-x-100 transition-transform duration-500 origin-left"></span>
+                    <span className="absolute inset-0 border border-text-light opacity-0 group-hover:opacity-100 animate-pulse-light
+                                     transition-opacity duration-300"></span>
+                  </button>
+                </Link>
+              </div>
+            </div>
+          </PanelTarjeta>
         ))}
       </div>
     </div>
