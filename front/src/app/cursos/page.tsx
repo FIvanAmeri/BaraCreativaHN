@@ -39,7 +39,7 @@ export default function CursosPage() {
     fetchCursosData();
   }, []);
 
-
+  // ✅ Filtrado por categoría y tipo
   const cursosFiltradosPorCategoria = cursos.filter((curso) => {
     if (filtro === 'Todo') return true;
 
@@ -104,7 +104,7 @@ export default function CursosPage() {
         Catálogo
       </h1>
 
- 
+      {/* Botones filtro */}
       <div className="flex justify-center space-x-4 mb-12 flex-wrap gap-2">
         <button
           onClick={() => setFiltro('Todo')}
@@ -148,7 +148,7 @@ export default function CursosPage() {
         </button>
       </div>
 
-
+      {/* Cursos */}
       {(filtro === 'Todo' || filtro === 'Cursos' || filtro === 'CAT' || filtro === 'Dynamis') && (
         <div className="mb-12">
           <h2
@@ -166,7 +166,7 @@ export default function CursosPage() {
               {cursosCursos.map((curso) => (
                 <PanelTarjeta
                   key={curso.id}
-                  claseAdicional="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 flex flex-col"
+                  claseAdicional="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 flex flex-col min-h-[400px]"
                   conEfectoEscaneo
                 >
                   <div className="flex flex-col h-full p-4">
@@ -187,7 +187,7 @@ export default function CursosPage() {
                       {curso.descripcion}
                     </p>
 
-              
+                    {/* Contenido que empuja el botón hacia abajo */}
                     <div className="mt-auto">
                       <p className="font-semibold text-base text-lime-400 mb-2 text-center">
                         💲 Precio: <span className="text-gray-200">${curso.precio}</span>
@@ -214,7 +214,7 @@ export default function CursosPage() {
         </div>
       )}
 
- 
+      {/* Servicios */}
       {(filtro === 'Todo' || filtro === 'Servicios' || filtro === 'CAT' || filtro === 'Dynamis') && (
         <div className="mb-12">
           <h2
@@ -232,7 +232,7 @@ export default function CursosPage() {
               {cursosServicios.map((servicio) => (
                 <PanelTarjeta
                   key={servicio.id}
-                  claseAdicional="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 flex flex-col"
+                  claseAdicional="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 flex flex-col min-h-[400px]"
                   conEfectoEscaneo
                 >
                   <div className="flex flex-col h-full p-4">
@@ -253,7 +253,7 @@ export default function CursosPage() {
                       {servicio.descripcion}
                     </p>
 
-            
+                    {/* Botón alineado al final */}
                     <div className="mt-auto">
                       <p className="font-semibold text-base text-lime-400 mb-2 text-center">
                         💲 Precio: <span className="text-gray-200">${servicio.precio}</span>
