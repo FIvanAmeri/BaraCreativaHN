@@ -131,7 +131,10 @@ export default function CursosPage() {
                   claseAdicional="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 flex flex-col min-h-[400px]"
                   conEfectoEscaneo
                 >
-                  <div className="flex flex-col h-full p-4">
+                  <Link
+                    href={`/cursos/${curso.id}`}
+                    className="flex flex-col h-full p-4 hover:cursor-pointer"
+                  >
                     {curso.imagenCurso && typeof curso.imagenCurso === 'string' && (
                       <div className="relative w-full h-32 mb-4">
                         <img
@@ -144,26 +147,10 @@ export default function CursosPage() {
                     )}
                     <h2 className="text-lg md:text-xl font-bold text-center mb-2 text-cyan-400">{curso.titulo}</h2>
                     <p className="text-xs text-gray-400 text-center mb-2 truncate w-full px-2">{curso.descripcion}</p>
-
-                    <div className="mt-auto flex flex-col items-center mb-2">
-                      <p className="font-semibold text-base text-lime-400 mb-2 text-center">
-                        💲 Precio: <span className="text-gray-200">${curso.precio}</span>
-                      </p>
-                      <Link href={`/cursos/${curso.id}`} passHref>
-                        <button className="relative w-full md:w-auto px-4 py-2 rounded-md bg-transparent border-2 border-cyan-400 text-gray-200 font-bold text-sm
-                                           uppercase tracking-wider overflow-hidden group
-                                           transition-colors duration-300">
-                          <span className="relative z-10 transition-colors duration-300 group-hover:text-gray-950">
-                            Ver Detalles
-                          </span>
-                          <span className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-magenta-400 transform scale-x-0
-                                           group-hover:scale-x-100 transition-transform duration-500 origin-left"></span>
-                          <span className="absolute inset-0 border border-gray-200 opacity-0 group-hover:opacity-100 animate-pulse-light
-                                           transition-opacity duration-300"></span>
-                        </button>
-                      </Link>
-                    </div>
-                  </div>
+                    <p className="mt-auto font-semibold text-base text-lime-400 mb-2 text-center">
+                      💲 Precio: <span className="text-gray-200">${curso.precio}</span>
+                    </p>
+                  </Link>
                 </PanelTarjeta>
               ))}
             </div>
@@ -189,7 +176,10 @@ export default function CursosPage() {
                   claseAdicional="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 flex flex-col min-h-[400px]"
                   conEfectoEscaneo
                 >
-                  <div className="flex flex-col h-full p-4">
+                  <Link
+                    href={`/cursos/${servicio.id}`}
+                    className="flex flex-col h-full p-4 hover:cursor-pointer"
+                  >
                     {servicio.imagenCurso && typeof servicio.imagenCurso === 'string' && (
                       <div className="relative w-full h-32 mb-4">
                         <img
@@ -202,26 +192,10 @@ export default function CursosPage() {
                     )}
                     <h2 className="text-lg md:text-xl font-bold text-center mb-2 text-cyan-400">{servicio.titulo}</h2>
                     <p className="text-xs text-gray-400 text-center mb-2 truncate w-full px-2">{servicio.descripcion}</p>
-
-                    <div className="mt-auto flex flex-col items-center mb-2">
-                      <p className="font-semibold text-base text-lime-400 mb-2 text-center">
-                        💲 Precio: <span className="text-gray-200">${servicio.precio}</span>
-                      </p>
-                      <Link href={`/cursos/${servicio.id}`} passHref>
-                        <button className="relative w-full md:w-auto px-4 py-2 rounded-md bg-transparent border-2 border-cyan-400 text-gray-200 font-bold text-sm
-                                           uppercase tracking-wider overflow-hidden group
-                                           transition-colors duration-300">
-                          <span className="relative z-10 transition-colors duration-300 group-hover:text-gray-950">
-                            Ver Detalles
-                          </span>
-                          <span className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-magenta-400 transform scale-x-0
-                                           group-hover:scale-x-100 transition-transform duration-500 origin-left"></span>
-                          <span className="absolute inset-0 border border-gray-200 opacity-0 group-hover:opacity-100 animate-pulse-light
-                                           transition-opacity duration-300"></span>
-                        </button>
-                      </Link>
-                    </div>
-                  </div>
+                    <p className="mt-auto font-semibold text-base text-lime-400 mb-2 text-center">
+                      💲 Precio: <span className="text-gray-200">${servicio.precio}</span>
+                    </p>
+                  </Link>
                 </PanelTarjeta>
               ))}
             </div>
