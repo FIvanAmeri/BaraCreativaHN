@@ -40,6 +40,15 @@ export default function PerfilUsuarioEditable({ usuario, onActualizar }: Props) 
 
   const manejarCambioFoto = (file: File | null) => {
     if (editando) setFotoPerfil(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewFoto(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setPreviewFoto(estadoInicial.fotoPerfilUrl);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -61,11 +70,13 @@ export default function PerfilUsuarioEditable({ usuario, onActualizar }: Props) 
 
     try {
       const formData = new FormData();
-      formData.append("nombreCompleto", nombreCompleto);
       formData.append("telefono", telefono);
-      if (fotoPerfil) formData.append("fotoPerfil", fotoPerfil);
+      
+      if (fotoPerfil) {
+        formData.append("fotoPerfil", fotoPerfil);
+      }
 
-      const res = await fetch(`${backendBaseUrl}/api/usuarios/${usuario.id}`, {
+      const res = await fetch(`${backendBaseUrl}/usuarios/${usuario.id}`, {
         method: "PATCH",
         body: formData,
         credentials: "include",
@@ -80,6 +91,7 @@ export default function PerfilUsuarioEditable({ usuario, onActualizar }: Props) 
       onActualizar(usuarioActualizado);
       setMensajeExito("✅ Perfil actualizado exitosamente 🚀");
       setEditando(false);
+      setFotoPerfil(null); 
     } catch (error: unknown) {
       if (error instanceof Error) setError(error.message);
       else setError("Error desconocido");

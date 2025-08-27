@@ -15,9 +15,9 @@ import {
   UploadedFile,
   ForbiddenException,
   BadRequestException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
 import { extname } from 'path';
 import type { Express } from 'express';
 
@@ -27,25 +27,28 @@ import { Usuario } from '../../entidades/usuario.entity';
 import { UsuarioAutenticado } from '../../auth/decoradores/usuario-autenticado.decorator';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard, Roles } from '../../auth/guards/roles.guard';
+import { CloudinaryService } from '../../services/cloudinary/cloudinary.service';
 
 @Controller('usuarios')
 export class UsuariosController {
   private readonly logger = new Logger(UsuariosController.name);
 
-  constructor(private readonly usuariosService: UsuariosService) {}
+  constructor(
+    private readonly usuariosService: UsuariosService,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
   async getMyProfile(@UsuarioAutenticado() usuario: Usuario): Promise<Partial<Usuario>> {
     this.logger.log(`Petición para el perfil de usuario recibida para: ${usuario.correoElectronico}`);
     if (!usuario || !usuario.id) {
-        throw new ForbiddenException('No se pudo obtener la información del usuario.');
+      throw new ForbiddenException('No se pudo obtener la información del usuario.');
     }
-  
+
     const { password, ...usuarioSinPassword } = usuario;
     return usuarioSinPassword;
   }
-
 
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -54,7 +57,6 @@ export class UsuariosController {
     this.logger.log(`Usuario administrador (${usuario.correoElectronico}) ha accedido a la lista completa de usuarios.`);
     return this.usuariosService.findAll();
   }
-
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
@@ -83,12 +85,11 @@ export class UsuariosController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileInterceptor('fotoPerfil', {
-      storage: diskStorage({
-        destination: './uploads/perfiles',
-        filename: (req, file, cb) => {
-          cb(null, file.originalname);
-        },
-      }),
+      fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith('image/')) cb(null, true);
+        else cb(new BadRequestException('Solo imágenes permitidas'), false);
+      },
+      limits: { fileSize: 2 * 1024 * 1024 }, 
     }),
   )
   async update(
@@ -115,8 +116,17 @@ export class UsuariosController {
       }
     }
 
+ 
     if (foto) {
-      usuarioData.fotoPerfil = foto.filename;
+      try {
+        this.logger.log(`Subiendo foto de perfil para el usuario con ID: ${idNum}`);
+        const fotoUrl = await this.cloudinaryService.uploadImage(foto);
+        usuarioData.fotoPerfil = fotoUrl;
+        this.logger.log(`Foto de perfil subida con éxito. URL: ${fotoUrl}`);
+      } catch (error) {
+        this.logger.error(`Error al subir la foto de perfil: ${error.message}`);
+        throw new InternalServerErrorException('Error al subir la foto de perfil a Cloudinary.');
+      }
     }
 
     return this.usuariosService.update(idNum, usuarioData);

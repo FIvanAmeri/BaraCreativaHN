@@ -11,7 +11,6 @@ import { Modulo } from '@/app/types/curso';
 
 export default function CursoDetalle() {
   const router = useRouter();
-
   const { curso, loading, error, crearOrden, onApprove } = useDatosCurso();
 
   const [currentModuleIndex, setCurrentModuleIndex] = useState(0);
@@ -46,6 +45,11 @@ export default function CursoDetalle() {
 
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
   
+
+  const cleanedImageUrl = curso?.imagenCurso
+    ? `${API_BASE_URL}/${curso.imagenCurso.startsWith('/') ? curso.imagenCurso.substring(1) : curso.imagenCurso}`
+    : '';
+
   return (
     <div
       className="p-6 md:p-8 lg:p-12 bg-dark-bg
@@ -74,7 +78,7 @@ export default function CursoDetalle() {
             <div className="animate-fade-in-up animation-delay-[100ms]">
               <PanelTarjeta colorBordeHover="accent-cyan" claseAdicional="p-4 md:p-6" conEfectoBrilloImagen>
                 <img
-                  src={`${API_BASE_URL}/${curso.imagenCurso}`}
+                  src={cleanedImageUrl}
                   alt={`Imagen de ${curso.titulo}`}
                   onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                   className="max-w-full h-auto object-contain rounded-md shadow-md

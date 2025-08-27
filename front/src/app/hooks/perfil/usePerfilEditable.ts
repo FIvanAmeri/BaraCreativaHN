@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Usuario } from "@/app/types/auth";
 
 export function usePerfilEditable(usuario: Usuario) {
@@ -17,13 +17,6 @@ export function usePerfilEditable(usuario: Usuario) {
     telefono: usuario.telefono || "",
     fotoPerfilUrl: previewFoto,
   });
-
-  useEffect(() => {
-    if (!fotoPerfil) return;
-    const url = URL.createObjectURL(fotoPerfil);
-    setPreviewFoto(url);
-    return () => URL.revokeObjectURL(url);
-  }, [fotoPerfil]);
 
   return {
     telefono,

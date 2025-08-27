@@ -17,9 +17,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 import { CursosService } from '../../services/cursos/cursos.service';
 import { CrearCursoDto } from '../../dto/cursos/crear-curso.dto';
-import { diskStorage } from 'multer';
+import { CloudinaryService } from '../../services/cloudinary/cloudinary.service';
 import { extname, join } from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { SubirScormDto } from '../../types/subir-scorm.dto';
@@ -37,6 +38,7 @@ export class CursosController {
   constructor(
     private readonly cursosService: CursosService,
     private readonly progresoService: ProgresoService,
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
   @Get()
@@ -51,14 +53,11 @@ export class CursosController {
     if (!userId) {
       throw new BadRequestException('ID de usuario no encontrado en la solicitud.');
     }
-
     const curso = await this.cursosService.obtenerCursoPorId(id);
     if (!curso) {
       throw new NotFoundException(`Curso con ID ${id} no encontrado`);
     }
-
     const scormCompletadoUsuario = await this.progresoService.isScormModuloCompleted(id, userId);
-
     return { ...curso, scormCompletadoUsuario };
   }
 
@@ -84,19 +83,6 @@ export class CursosController {
   @Post(':id/imagen')
   @UseInterceptors(
     FileInterceptor('imagen', {
-      storage: diskStorage({
-        destination: (req, file, cb) => {
-          const uploadPath = join(process.cwd(), 'uploads', 'imagenes-cursos');
-          if (!fs.existsSync(uploadPath)) {
-            fs.mkdirSync(uploadPath, { recursive: true });
-          }
-          cb(null, uploadPath);
-        },
-        filename: (req, file, cb) => {
-          const uniqueName = uuidv4() + extname(file.originalname);
-          cb(null, uniqueName);
-        },
-      }),
       fileFilter: (req, file, cb) => {
         if (file.mimetype.startsWith('image/')) cb(null, true);
         else cb(new BadRequestException('Solo imágenes permitidas'), false);
@@ -109,16 +95,19 @@ export class CursosController {
     @UploadedFile() imagen: Express.Multer.File,
   ) {
     if (!imagen) throw new BadRequestException('Imagen requerida');
-
-    const imagenCursoPath = `/uploads/imagenes-cursos/${imagen.filename}`;
+    let imagenCursoUrl: string;
+    try {
+      imagenCursoUrl = await this.cloudinaryService.uploadImage(imagen);
+    } catch (error) {
+      throw new InternalServerErrorException('Error al subir la imagen a Cloudinary');
+    }
     const cursoActualizado = await this.cursosService.actualizarCurso(id, {
-      imagenCurso: imagenCursoPath,
+      imagenCurso: imagenCursoUrl,
     });
-
     return {
       message: 'Imagen subida y curso actualizado correctamente',
       curso: cursoActualizado,
-      rutaImagen: imagenCursoPath,
+      rutaImagen: imagenCursoUrl,
     };
   }
 
@@ -154,12 +143,9 @@ export class CursosController {
     @Body() body: SubirScormDto,
   ) {
     const { cursoId } = body;
-
     if (!scormFile) throw new BadRequestException('Archivo SCORM requerido');
-
     try {
       const updatedCurso = await this.cursosService.actualizarArchivoScorm(cursoId, scormFile);
-
       return {
         message: 'Archivo SCORM subido, descomprimido y curso actualizado correctamente',
         path: updatedCurso.archivoScorm,
@@ -209,7 +195,6 @@ export class CursosController {
     if (!files || files.length === 0) {
       throw new BadRequestException('No se subieron archivos para el módulo.');
     }
-
     const updatedPaths: {
       videoUrls: string[];
       pdfUrls: string[];
@@ -219,7 +204,6 @@ export class CursosController {
       pdfUrls: [],
       imageUrls: [],
     };
-
     files.forEach(file => {
       const filePath = `/uploads/modulos/${file.filename}`;
       if (file.mimetype.startsWith('video/')) {
@@ -230,7 +214,6 @@ export class CursosController {
         updatedPaths.imageUrls.push(filePath);
       }
     });
-
     try {
       const updatedModulo = await this.cursosService.actualizarModuloFilePaths(moduloId, updatedPaths);
       return {
@@ -249,7 +232,6 @@ export class CursosController {
     if (!userId) {
       throw new BadRequestException('ID de usuario no encontrado en la solicitud.');
     }
-
     try {
       const nextModuleData = await this.progresoService.getNextModuleUrl(cursoId, userId);
       if (!nextModuleData) {
@@ -264,10 +246,9 @@ export class CursosController {
     }
   }
 
-@UseGuards(JwtAuthGuard)
-@Get('usuario/mis-cursos')
-async obtenerCursosUsuario(@Req() req: UserRequest) {
-  return this.cursosService.obtenerCursosDeUsuario(req.user.id);
-}
-
+  @UseGuards(JwtAuthGuard)
+  @Get('usuario/mis-cursos')
+  async obtenerCursosUsuario(@Req() req: UserRequest) {
+    return this.cursosService.obtenerCursosDeUsuario(req.user.id);
+  }
 }

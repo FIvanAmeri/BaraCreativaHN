@@ -12,6 +12,7 @@ import { ReporteProgresoModule } from './modules/reporte-progreso/reporte-progre
 import { CertificadosModule } from './modules/certificados/certificados.module';
 import { BadgesModule } from './modules/badges/badges.module';
 import configuration, { AppConfig } from './config/configuration';
+import { CloudinaryModule } from './modules/cloudinary/cloudinary.module'; 
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import configuration, { AppConfig } from './config/configuration';
     ReporteProgresoModule,
     CertificadosModule,
     BadgesModule,
+    CloudinaryModule,
   ],
 })
 export class AppModule {}
