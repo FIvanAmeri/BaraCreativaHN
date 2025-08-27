@@ -16,22 +16,15 @@ export default function CursosPage() {
     const fetchCursosData = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/cursos`, {
-          credentials: 'include',
-        });
-        if (!response.ok) {
-          throw new Error('Error al obtener la lista de cursos');
-        }
+        const response = await fetch(`/api/cursos`, { credentials: 'include' });
+        if (!response.ok) throw new Error('Error al obtener la lista de cursos');
         const fetchedCursos: Curso[] = await response.json();
         setCursos(fetchedCursos);
         setError(null);
       } catch (err: unknown) {
         console.error(err);
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError('Ocurrió un error desconocido.');
-        }
+        if (err instanceof Error) setError(err.message);
+        else setError('Ocurrió un error desconocido.');
       } finally {
         setLoading(false);
       }
@@ -41,24 +34,15 @@ export default function CursosPage() {
 
   const cursosFiltradosPorCategoria = cursos.filter((curso) => {
     if (filtro === 'Todo') return true;
-    if (filtro === 'CAT' || filtro === 'Dynamis') {
+    if (filtro === 'CAT' || filtro === 'Dynamis')
       return curso.categoria?.toLowerCase() === filtro.toLowerCase();
-    }
-    if (filtro === 'Cursos') {
-      return curso.claseItem === 'curso';
-    }
-    if (filtro === 'Servicios') {
-      return curso.claseItem === 'servicio';
-    }
+    if (filtro === 'Cursos') return curso.claseItem === 'curso';
+    if (filtro === 'Servicios') return curso.claseItem === 'servicio';
     return true;
   });
 
-  const cursosCursos = cursosFiltradosPorCategoria.filter(
-    (curso) => curso.claseItem === 'curso'
-  );
-  const cursosServicios = cursosFiltradosPorCategoria.filter(
-    (curso) => curso.claseItem === 'servicio'
-  );
+  const cursosCursos = cursosFiltradosPorCategoria.filter(curso => curso.claseItem === 'curso');
+  const cursosServicios = cursosFiltradosPorCategoria.filter(curso => curso.claseItem === 'servicio');
 
   if (loading) {
     return (
@@ -82,12 +66,9 @@ export default function CursosPage() {
     );
   }
 
-  const baseButtonClasses =
-    'px-6 py-2 rounded-full font-bold text-lg transition-colors duration-300';
-  const activeClasses =
-    'bg-cyan-500 text-gray-900 shadow-md transform scale-105';
-  const inactiveClasses =
-    'bg-gray-800 text-gray-200 hover:bg-gray-700';
+  const baseButtonClasses = 'px-6 py-2 rounded-full font-bold text-lg transition-colors duration-300';
+  const activeClasses = 'bg-cyan-500 text-gray-900 shadow-md transform scale-105';
+  const inactiveClasses = 'bg-gray-800 text-gray-200 hover:bg-gray-700';
 
   return (
     <div className="bg-gray-950 min-h-screen text-gray-200 py-16 px-4 md:px-8">
@@ -102,41 +83,31 @@ export default function CursosPage() {
       <div className="flex justify-center space-x-4 mb-12 flex-wrap gap-2">
         <button
           onClick={() => setFiltro('Todo')}
-          className={`${baseButtonClasses} ${
-            filtro === 'Todo' ? activeClasses : inactiveClasses
-          }`}
+          className={`${baseButtonClasses} ${filtro === 'Todo' ? activeClasses : inactiveClasses}`}
         >
           Todo
         </button>
         <button
           onClick={() => setFiltro('Cursos')}
-          className={`${baseButtonClasses} ${
-            filtro === 'Cursos' ? activeClasses : inactiveClasses
-          }`}
+          className={`${baseButtonClasses} ${filtro === 'Cursos' ? activeClasses : inactiveClasses}`}
         >
           Cursos
         </button>
         <button
           onClick={() => setFiltro('Servicios')}
-          className={`${baseButtonClasses} ${
-            filtro === 'Servicios' ? activeClasses : inactiveClasses
-          }`}
+          className={`${baseButtonClasses} ${filtro === 'Servicios' ? activeClasses : inactiveClasses}`}
         >
           Servicios
         </button>
         <button
           onClick={() => setFiltro('CAT')}
-          className={`${baseButtonClasses} ${
-            filtro === 'CAT' ? activeClasses : inactiveClasses
-          }`}
+          className={`${baseButtonClasses} ${filtro === 'CAT' ? activeClasses : inactiveClasses}`}
         >
           CAT
         </button>
         <button
           onClick={() => setFiltro('Dynamis')}
-          className={`${baseButtonClasses} ${
-            filtro === 'Dynamis' ? activeClasses : inactiveClasses
-          }`}
+          className={`${baseButtonClasses} ${filtro === 'Dynamis' ? activeClasses : inactiveClasses}`}
         >
           Dynamis
         </button>
@@ -151,9 +122,7 @@ export default function CursosPage() {
             Cursos
           </h2>
           {cursosCursos.length === 0 ? (
-            <p className="text-left text-gray-400">
-              No hay cursos disponibles para este filtro.
-            </p>
+            <p className="text-left text-gray-400">No hay cursos disponibles para este filtro.</p>
           ) : (
             <div className="flex flex-wrap gap-4 justify-start">
               {cursosCursos.map((curso) => (
@@ -173,13 +142,10 @@ export default function CursosPage() {
                         <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-70 rounded-md"></div>
                       </div>
                     )}
-                    <h2 className="text-lg md:text-xl font-bold text-center mb-2 text-cyan-400">
-                      {curso.titulo}
-                    </h2>
-                    <p className="text-xs text-gray-400 text-center mb-2 truncate w-full px-2">
-                      {curso.descripcion}
-                    </p>
-                    <div className="mt-auto">
+                    <h2 className="text-lg md:text-xl font-bold text-center mb-2 text-cyan-400">{curso.titulo}</h2>
+                    <p className="text-xs text-gray-400 text-center mb-2 truncate w-full px-2">{curso.descripcion}</p>
+
+                    <div className="mt-auto flex flex-col items-center mb-2">
                       <p className="font-semibold text-base text-lime-400 mb-2 text-center">
                         💲 Precio: <span className="text-gray-200">${curso.precio}</span>
                       </p>
@@ -214,9 +180,7 @@ export default function CursosPage() {
             Servicios
           </h2>
           {cursosServicios.length === 0 ? (
-            <p className="text-left text-gray-400">
-              No hay servicios disponibles para este filtro.
-            </p>
+            <p className="text-left text-gray-400">No hay servicios disponibles para este filtro.</p>
           ) : (
             <div className="flex flex-wrap gap-4 justify-start">
               {cursosServicios.map((servicio) => (
@@ -236,13 +200,10 @@ export default function CursosPage() {
                         <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-70 rounded-md"></div>
                       </div>
                     )}
-                    <h2 className="text-lg md:text-xl font-bold text-center mb-2 text-cyan-400">
-                      {servicio.titulo}
-                    </h2>
-                    <p className="text-xs text-gray-400 text-center mb-2 truncate w-full px-2">
-                      {servicio.descripcion}
-                    </p>
-                    <div className="mt-auto">
+                    <h2 className="text-lg md:text-xl font-bold text-center mb-2 text-cyan-400">{servicio.titulo}</h2>
+                    <p className="text-xs text-gray-400 text-center mb-2 truncate w-full px-2">{servicio.descripcion}</p>
+
+                    <div className="mt-auto flex flex-col items-center mb-2">
                       <p className="font-semibold text-base text-lime-400 mb-2 text-center">
                         💲 Precio: <span className="text-gray-200">${servicio.precio}</span>
                       </p>
