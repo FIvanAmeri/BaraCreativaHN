@@ -6,16 +6,10 @@ import { Curso } from '@/app/types/curso';
 import { PanelTarjeta } from '@/components/ScormID/PanelTarjeta';
 import { FaMicrochip } from 'react-icons/fa';
 
-
-type ClaseItemFiltro = 'Todos' | 'curso' | 'servicio';
-type CategoriaFiltro = 'Todos' | 'Dynamis' | 'Empresas';
-
 export default function CursosPage() {
   const [cursos, setCursos] = useState<Curso[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filtroClaseItem, setFiltroClaseItem] = useState<ClaseItemFiltro>('Todos');
-  const [filtroCategoria, setFiltroCategoria] = useState<CategoriaFiltro>('Todos');
 
   useEffect(() => {
     const fetchCursosData = async () => {
@@ -45,11 +39,8 @@ export default function CursosPage() {
   }, []);
 
 
-  const cursosFiltrados = cursos.filter(curso => {
-    const claseItemCoincide = filtroClaseItem === 'Todos' || curso.claseItem === filtroClaseItem;
-    const categoriaCoincide = filtroCategoria === 'Todos' || curso.categoria === filtroCategoria;
-    return claseItemCoincide && categoriaCoincide;
-  });
+  const cursosCursos = cursos.filter(curso => curso.claseItem === 'curso');
+  const cursosServicios = cursos.filter(curso => curso.claseItem === 'servicio');
 
   if (loading) {
     return (
@@ -73,14 +64,6 @@ export default function CursosPage() {
     );
   }
 
-  if (cursos.length === 0) {
-    return (
-      <div className="flex justify-center items-center h-screen bg-gray-950 text-gray-200">
-        <p className="text-xl">No se encontraron cursos disponibles. ¡Creemos uno!</p>
-      </div>
-    );
-  }
-
   return (
     <div className="bg-gray-950 min-h-screen text-gray-200 py-16 px-4 md:px-8">
       <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-center mb-12
@@ -89,98 +72,114 @@ export default function CursosPage() {
         Catálogo
       </h1>
 
-     
-      <div className="flex flex-wrap justify-center space-x-2 sm:space-x-4 mb-8 md:mb-12">
-        <button
-          onClick={() => setFiltroCategoria('Todos')}
-          className={`px-4 py-2 sm:px-6 sm:py-3 rounded-full font-bold transition-all duration-300 transform hover:scale-105
-            ${filtroCategoria === 'Todos' ? 'bg-indigo-600 text-white shadow-lg drop-shadow-[0_0_8px_rgba(99,102,241,0.7)]' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
-        >
-          Todas las Categorías
-        </button>
-        <button
-          onClick={() => setFiltroCategoria('Dynamis')}
-          className={`px-4 py-2 sm:px-6 sm:py-3 rounded-full font-bold transition-all duration-300 transform hover:scale-105
-            ${filtroCategoria === 'Dynamis' ? 'bg-cyan-600 text-white shadow-lg drop-shadow-[0_0_8px_rgba(6,182,212,0.7)]' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
-        >
-          Dynamis
-        </button>
-        <button
-          onClick={() => setFiltroCategoria('Empresas')}
-          className={`px-4 py-2 sm:px-6 sm:py-3 rounded-full font-bold transition-all duration-300 transform hover:scale-105
-            ${filtroCategoria === 'Empresas' ? 'bg-lime-600 text-white shadow-lg drop-shadow-[0_0_8px_rgba(132,204,22,0.7)]' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
-        >
-          Empresas
-        </button>
-      </div>
-
-
-      <div className="flex flex-wrap justify-center space-x-2 sm:space-x-4 mb-12">
-        <button
-          onClick={() => setFiltroClaseItem('Todos')}
-          className={`px-4 py-2 sm:px-6 sm:py-3 rounded-full font-bold transition-all duration-300 transform hover:scale-105
-            ${filtroClaseItem === 'Todos' ? 'bg-indigo-600 text-white shadow-lg drop-shadow-[0_0_8px_rgba(99,102,241,0.7)]' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
-        >
-          Todos los Tipos
-        </button>
-        <button
-          onClick={() => setFiltroClaseItem('curso')}
-          className={`px-4 py-2 sm:px-6 sm:py-3 rounded-full font-bold transition-all duration-300 transform hover:scale-105
-            ${filtroClaseItem === 'curso' ? 'bg-cyan-600 text-white shadow-lg drop-shadow-[0_0_8px_rgba(6,182,212,0.7)]' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
-        >
+ 
+      <div className="mb-12">
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-center mb-8
+                       text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-lime-400">
           Cursos
-        </button>
-        <button
-          onClick={() => setFiltroClaseItem('servicio')}
-          className={`px-4 py-2 sm:px-6 sm:py-3 rounded-full font-bold transition-all duration-300 transform hover:scale-105
-            ${filtroClaseItem === 'servicio' ? 'bg-lime-600 text-white shadow-lg drop-shadow-[0_0_8px_rgba(132,204,22,0.7)]' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
-        >
-          Servicios
-        </button>
+        </h2>
+        {cursosCursos.length === 0 ? (
+          <p className="text-center text-gray-400">No hay cursos disponibles en este momento.</p>
+        ) : (
+          <div className="flex flex-wrap gap-6 justify-center items-stretch">
+            {cursosCursos.map(curso => (
+              <PanelTarjeta key={curso.id} claseAdicional="w-full sm:w-1/2 md:w-1/3 lg:w-1/4" conEfectoEscaneo>
+                <div className="flex flex-col items-center p-4">
+                  {curso.imagenCurso && typeof curso.imagenCurso === 'string' && (
+                    <div className="relative w-full h-48 mb-4">
+                      <img
+                        src={curso.imagenCurso}
+                        alt={`Imagen de ${curso.titulo}`}
+                        className="w-full h-full object-cover rounded-md border border-gray-700 shadow-lg hover:border-cyan-400 transition-colors duration-300"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-70 rounded-md"></div>
+                    </div>
+                  )}
+                  <h2 className="text-xl md:text-2xl font-bold text-center mb-2 text-cyan-400">
+                    {curso.titulo}
+                  </h2>
+                  <p className="text-sm text-gray-400 text-center mb-4 truncate w-full px-2">
+                    {curso.descripcion}
+                  </p>
+                  
+                  <div className="flex flex-col items-center w-full mt-auto">
+                    <p className="font-semibold text-lg text-lime-400 mb-4">
+                      💲 Precio: <span className="text-gray-200">${curso.precio}</span>
+                    </p>
+                    <Link href={`/cursos/${curso.id}`} passHref>
+                      <button className="relative w-full md:w-auto px-6 py-3 rounded-md bg-transparent border-2 border-cyan-400 text-gray-200 font-bold text-lg
+                                         uppercase tracking-wider overflow-hidden group
+                                         transition-colors duration-300">
+                        <span className="relative z-10 transition-colors duration-300 group-hover:text-gray-950">
+                          Ver Detalles
+                        </span>
+                        <span className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-magenta-400 transform scale-x-0
+                                         group-hover:scale-x-100 transition-transform duration-500 origin-left"></span>
+                        <span className="absolute inset-0 border border-gray-200 opacity-0 group-hover:opacity-100 animate-pulse-light
+                                         transition-opacity duration-300"></span>
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+              </PanelTarjeta>
+            ))}
+          </div>
+        )}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 justify-items-center">
-        {cursosFiltrados.map(curso => (
-          <PanelTarjeta key={curso.id} claseAdicional="w-full max-w-sm" conEfectoEscaneo>
-            <div className="flex flex-col items-center p-4">
-              {curso.imagenCurso && typeof curso.imagenCurso === 'string' && (
-                <div className="relative w-full h-48 mb-4">
-                  <img
-                    src={curso.imagenCurso}
-                    alt={`Imagen de ${curso.titulo}`}
-                    className="w-full h-full object-cover rounded-md border border-gray-700 shadow-lg hover:border-cyan-400 transition-colors duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-70 rounded-md"></div>
+
+      <div className="mb-12">
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-center mb-8
+                       text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-cyan-400">
+          Servicios
+        </h2>
+        {cursosServicios.length === 0 ? (
+          <p className="text-center text-gray-400">No hay servicios disponibles en este momento.</p>
+        ) : (
+          <div className="flex flex-wrap gap-6 justify-center items-stretch">
+            {cursosServicios.map(servicio => (
+              <PanelTarjeta key={servicio.id} claseAdicional="w-full sm:w-1/2 md:w-1/3 lg:w-1/4" conEfectoEscaneo>
+                <div className="flex flex-col items-center p-4">
+                  {servicio.imagenCurso && typeof servicio.imagenCurso === 'string' && (
+                    <div className="relative w-full h-48 mb-4">
+                      <img
+                        src={servicio.imagenCurso}
+                        alt={`Imagen de ${servicio.titulo}`}
+                        className="w-full h-full object-cover rounded-md border border-gray-700 shadow-lg hover:border-cyan-400 transition-colors duration-300"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-70 rounded-md"></div>
+                    </div>
+                  )}
+                  <h2 className="text-xl md:text-2xl font-bold text-center mb-2 text-cyan-400">
+                    {servicio.titulo}
+                  </h2>
+                  <p className="text-sm text-gray-400 text-center mb-4 truncate w-full px-2">
+                    {servicio.descripcion}
+                  </p>
+                  
+                  <div className="flex flex-col items-center w-full mt-auto">
+                    <p className="font-semibold text-lg text-lime-400 mb-4">
+                      💲 Precio: <span className="text-gray-200">${servicio.precio}</span>
+                    </p>
+                    <Link href={`/cursos/${servicio.id}`} passHref>
+                      <button className="relative w-full md:w-auto px-6 py-3 rounded-md bg-transparent border-2 border-cyan-400 text-gray-200 font-bold text-lg
+                                         uppercase tracking-wider overflow-hidden group
+                                         transition-colors duration-300">
+                        <span className="relative z-10 transition-colors duration-300 group-hover:text-gray-950">
+                          Ver Detalles
+                        </span>
+                        <span className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-magenta-400 transform scale-x-0
+                                         group-hover:scale-x-100 transition-transform duration-500 origin-left"></span>
+                        <span className="absolute inset-0 border border-gray-200 opacity-0 group-hover:opacity-100 animate-pulse-light
+                                         transition-opacity duration-300"></span>
+                      </button>
+                    </Link>
+                  </div>
                 </div>
-              )}
-              <h2 className="text-xl md:text-2xl font-bold text-center mb-2 text-cyan-400">
-                {curso.titulo}
-              </h2>
-              <p className="text-sm text-gray-400 text-center mb-4 truncate w-full px-2">
-                {curso.descripcion}
-              </p>
-              
-              <div className="flex flex-col items-center w-full mt-auto">
-                <p className="font-semibold text-lg text-lime-400 mb-4">
-                  💲 Precio: <span className="text-gray-200">${curso.precio}</span>
-                </p>
-                <Link href={`/cursos/${curso.id}`} passHref>
-                  <button className="relative w-full md:w-auto px-6 py-3 rounded-md bg-transparent border-2 border-cyan-400 text-gray-200 font-bold text-lg
-                                     uppercase tracking-wider overflow-hidden group
-                                     transition-colors duration-300">
-                    <span className="relative z-10 transition-colors duration-300 group-hover:text-gray-950">
-                      Ver Detalles
-                    </span>
-                    <span className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-magenta-400 transform scale-x-0
-                                     group-hover:scale-x-100 transition-transform duration-500 origin-left"></span>
-                    <span className="absolute inset-0 border border-gray-200 opacity-0 group-hover:opacity-100 animate-pulse-light
-                                     transition-opacity duration-300"></span>
-                  </button>
-                </Link>
-              </div>
-            </div>
-          </PanelTarjeta>
-        ))}
+              </PanelTarjeta>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
