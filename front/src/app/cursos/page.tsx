@@ -135,19 +135,34 @@ export default function CursosPage() {
                     href={`/cursos/${curso.id}`}
                     className="flex flex-col h-full p-4 hover:cursor-pointer"
                   >
-                    {curso.imagenCurso && typeof curso.imagenCurso === 'string' && (
-                      <div className="relative w-full h-32 mb-4">
+                    {/* Imagen */}
+                    <div className="flex-shrink-0 w-full h-32 mb-4 relative">
+                      {curso.imagenCurso && typeof curso.imagenCurso === 'string' ? (
                         <img
                           src={curso.imagenCurso}
                           alt={`Imagen de ${curso.titulo}`}
-                          className="w-full h-full object-contain rounded-md border border-gray-700 shadow-lg hover:border-cyan-400 transition-colors duration-300"
+                          className="w-full h-full object-cover rounded-md border border-gray-700 shadow-lg transition-colors duration-300"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-70 rounded-md"></div>
-                      </div>
-                    )}
-                    <h2 className="text-lg md:text-xl font-bold text-center mb-2 text-cyan-400">{curso.titulo}</h2>
-                    <p className="text-xs text-gray-400 text-center mb-2 truncate w-full px-2">{curso.descripcion}</p>
-                    <p className="mt-auto font-semibold text-base text-lime-400 mb-2 text-center">
+                      ) : (
+                        <div className="w-full h-full bg-gray-800 rounded-md flex items-center justify-center text-gray-400">
+                          Sin imagen
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-70 rounded-md"></div>
+                    </div>
+
+                    {/* Título */}
+                    <h2 className="text-lg md:text-xl font-bold text-center text-cyan-400 mb-2 line-clamp-2 h-[3rem]">
+                      {curso.titulo}
+                    </h2>
+
+                    {/* Descripción */}
+                    <p className="text-xs text-gray-400 text-center mb-2 line-clamp-3 h-[3.5rem] px-2">
+                      {curso.descripcion}
+                    </p>
+
+                    {/* Precio al fondo */}
+                    <p className="mt-auto font-semibold text-base text-lime-400 text-center">
                       💲 Precio: <span className="text-gray-200">${curso.precio}</span>
                     </p>
                   </Link>
@@ -180,19 +195,34 @@ export default function CursosPage() {
                     href={`/cursos/${servicio.id}`}
                     className="flex flex-col h-full p-4 hover:cursor-pointer"
                   >
-                    {servicio.imagenCurso && typeof servicio.imagenCurso === 'string' && (
-                      <div className="relative w-full h-32 mb-4">
+                    {/* Imagen */}
+                    <div className="flex-shrink-0 w-full h-32 mb-4 relative">
+                      {servicio.imagenCurso && typeof servicio.imagenCurso === 'string' ? (
                         <img
                           src={servicio.imagenCurso}
                           alt={`Imagen de ${servicio.titulo}`}
-                          className="w-full h-full object-contain rounded-md border border-gray-700 shadow-lg hover:border-cyan-400 transition-colors duration-300"
+                          className="w-full h-full object-cover rounded-md border border-gray-700 shadow-lg transition-colors duration-300"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-70 rounded-md"></div>
-                      </div>
-                    )}
-                    <h2 className="text-lg md:text-xl font-bold text-center mb-2 text-cyan-400">{servicio.titulo}</h2>
-                    <p className="text-xs text-gray-400 text-center mb-2 truncate w-full px-2">{servicio.descripcion}</p>
-                    <p className="mt-auto font-semibold text-base text-lime-400 mb-2 text-center">
+                      ) : (
+                        <div className="w-full h-full bg-gray-800 rounded-md flex items-center justify-center text-gray-400">
+                          Sin imagen
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-70 rounded-md"></div>
+                    </div>
+
+                    {/* Título */}
+                    <h2 className="text-lg md:text-xl font-bold text-center text-cyan-400 mb-2 line-clamp-2 h-[3rem]">
+                      {servicio.titulo}
+                    </h2>
+
+                    {/* Descripción */}
+                    <p className="text-xs text-gray-400 text-center mb-2 line-clamp-3 h-[3.5rem] px-2">
+                      {servicio.descripcion}
+                    </p>
+
+                    {/* Precio al fondo */}
+                    <p className="mt-auto font-semibold text-base text-lime-400 text-center">
                       💲 Precio: <span className="text-gray-200">${servicio.precio}</span>
                     </p>
                   </Link>
