@@ -11,6 +11,7 @@ import { Modulo } from '@/app/types/curso';
 
 export default function CursoDetalle() {
   const router = useRouter();
+
   const { curso, loading, error, crearOrden, onApprove } = useDatosCurso();
 
   const [currentModuleIndex, setCurrentModuleIndex] = useState(0);
@@ -75,6 +76,7 @@ export default function CursoDetalle() {
                 <img
                   src={`${API_BASE_URL}/${curso.imagenCurso}`}
                   alt={`Imagen de ${curso.titulo}`}
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                   className="max-w-full h-auto object-contain rounded-md shadow-md
                            border border-transparent group-hover:border-accent-magenta transition-all duration-300
                            image-hover-tilt max-h-96 w-full"

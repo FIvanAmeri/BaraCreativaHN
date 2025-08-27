@@ -1,20 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Curso } from '@/app/types/curso';
 import Link from 'next/link';
-import Image from 'next/image';
+import { Curso } from '@/app/types/curso';
 import { PanelTarjeta } from '@/components/ScormID/PanelTarjeta';
+import { FaPlay, FaMicrochip } from 'react-icons/fa'; 
 
 
 export default function CursosPage() {
   const [cursos, setCursos] = useState<Curso[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
-
 
   useEffect(() => {
     const fetchCursosData = async () => {
@@ -46,68 +42,85 @@ export default function CursosPage() {
 
   if (loading) {
     return (
-      <div className="text-center text-lg mt-8 text-text-light animate-pulse drop-shadow-cyber-glow-cyan">
-        <p>Cargando lista de cursos...</p>
+      <div className="flex justify-center items-center h-screen bg-dark-bg text-accent-cyan">
+        <p className="text-xl animate-pulse">
+          <FaMicrochip className="inline-block animate-spin mr-2" />
+          Cargando datos interdimensionales...
+        </p>
       </div>
     );
   }
-
 
   if (error) {
     return (
-      <div className="text-red-500 text-center mt-8 p-6 bg-mid-dark-bg border border-border-glitch rounded-lg shadow-xl animate-fade-in-up relative overflow-hidden">
-        <p className="font-bold mb-3 text-2xl text-accent-magenta drop-shadow-cyber-glow-magenta">¡ERROR DETECTADO!</p>
-        <p className="text-text-light text-base mb-4">{error}</p>
-        <p className="mt-4 text-sm text-text-muted">Interferencia detectada. Reintenta la conexión o contacta al operador de soporte.</p>
+      <div className="flex justify-center items-center h-screen bg-dark-bg text-accent-magenta text-center">
+        <div className="p-8 border border-border-glitch rounded-lg shadow-xl animate-fade-in-up">
+          <h2 className="text-2xl font-bold">Error al cargar cursos</h2>
+          <p className="mt-4 text-sm">{error}</p>
+        </div>
       </div>
     );
   }
 
 
-  if (!cursos || cursos.length === 0) {
+  if (cursos.length === 0) {
     return (
-      <div className="text-center text-lg mt-8 text-text-light drop-shadow-cyber-glow-cyan">
-        <p>No se encontraron cursos disponibles.</p>
+      <div className="flex justify-center items-center h-screen bg-dark-bg text-text-light">
+        <p className="text-xl">No se encontraron cursos disponibles. ¡Creemos uno!</p>
       </div>
     );
   }
 
+ 
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
   return (
-    <div className="p-6 md:p-8 lg:p-12 bg-dark-bg rounded-2xl shadow-xl text-text-light font-sans max-w-sm sm:max-w-md md:max-w-4xl xl:max-w-6xl mx-auto my-8 md:my-12">
-      <div className="text-center">
-        <h1 className="mb-12 text-4xl sm:text-5xl lg:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-magenta drop-shadow-cyber-glow-magenta animate-fade-in-up">
-          Catálogo de Cursos
-        </h1>
-      </div>
+    <div className="bg-dark-bg min-h-screen text-text-light py-16 px-4 md:px-8">
+      <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-center mb-12
+                     text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-magenta
+                     drop-shadow-cyber-glow-magenta animate-fade-in-up">
+        Catálogo
+      </h1>
       
-   
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
-        {cursos.map((curso) => (
-          <PanelTarjeta key={curso.id} colorBordeHover="accent-cyan" conEfectoBrilloImagen>
-            <div className="flex flex-col h-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+        {cursos.map(curso => (
+          <PanelTarjeta key={curso.id} claseAdicional="w-full max-w-sm" conEfectoEscaneo>
+            <div className="flex flex-col items-center p-4">
               {curso.imagenCurso && typeof curso.imagenCurso === 'string' && (
                 <div className="relative w-full h-48 mb-4">
-                  <Image
+                  <img
                     src={`${API_BASE_URL}/${curso.imagenCurso}`}
                     alt={`Imagen de ${curso.titulo}`}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-md"
-                    unoptimized={true} 
+                    className="w-full h-full object-cover rounded-md border border-mid-dark-bg shadow-lg hover:border-accent-cyan transition-colors duration-300"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-dark-bg via-transparent to-transparent opacity-70 rounded-md"></div>
                 </div>
               )}
-              <h2 className="text-2xl font-bold text-accent-lime mb-2">{curso.titulo}</h2>
-              <p className="text-sm text-text-muted mb-4 line-clamp-3 flex-grow">{curso.descripcion}</p>
-              <Link href={`/cursos/${curso.id}`}>
-                <div className="text-center font-bold py-2 px-4 rounded-full transition-all duration-300
-                            bg-accent-cyan text-dark-bg hover:bg-accent-magenta hover:text-white
-                            shadow-md hover:shadow-lg drop-shadow-cyber-glow-cyan hover:drop-shadow-cyber-glow-magenta
-                            animate-pulse-light">
-                  Ver Detalles
-                </div>
-              </Link>
+              <h2 className="text-xl md:text-2xl font-bold text-center mb-2 text-accent-cyan">
+                {curso.titulo}
+              </h2>
+              <p className="text-sm text-text-muted text-center mb-4 truncate w-full px-2">
+                {curso.descripcion}
+              </p>
+              
+              <div className="flex flex-col items-center w-full mt-auto">
+                <p className="font-semibold text-lg text-accent-lime mb-4">
+                  💲 Precio: <span className="text-text-light">${curso.precio}</span>
+                </p>
+                <Link href={`/cursos/${curso.id}`} passHref>
+                  <button className="relative w-full md:w-auto px-6 py-3 rounded-md bg-transparent border-2 border-accent-cyan text-text-light font-bold text-lg
+                                     uppercase tracking-wider overflow-hidden group
+                                     transition-colors duration-300">
+                    <span className="relative z-10 transition-colors duration-300 group-hover:text-dark-bg">
+                      Ver Detalles
+                    </span>
+                    <span className="absolute inset-0 bg-gradient-to-r from-accent-cyan to-accent-magenta transform scale-x-0
+                                     group-hover:scale-x-100 transition-transform duration-500 origin-left"></span>
+                    <span className="absolute inset-0 border border-text-light opacity-0 group-hover:opacity-100 animate-pulse-light
+                                     transition-opacity duration-300"></span>
+                  </button>
+                </Link>
+              </div>
             </div>
           </PanelTarjeta>
         ))}
