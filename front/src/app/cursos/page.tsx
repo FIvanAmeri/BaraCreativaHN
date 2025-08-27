@@ -39,22 +39,17 @@ export default function CursosPage() {
     fetchCursosData();
   }, []);
 
-  // ✅ Filtrado por categoría y tipo
   const cursosFiltradosPorCategoria = cursos.filter((curso) => {
     if (filtro === 'Todo') return true;
-
     if (filtro === 'CAT' || filtro === 'Dynamis') {
       return curso.categoria?.toLowerCase() === filtro.toLowerCase();
     }
-
     if (filtro === 'Cursos') {
       return curso.claseItem === 'curso';
     }
-
     if (filtro === 'Servicios') {
       return curso.claseItem === 'servicio';
     }
-
     return true;
   });
 
@@ -97,14 +92,13 @@ export default function CursosPage() {
   return (
     <div className="bg-gray-950 min-h-screen text-gray-200 py-16 px-4 md:px-8">
       <h1
-        className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-center mb-8 pt-16
-                       text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-magenta
-                       drop-shadow-[0_0_8px_rgba(255,0,255,0.5)] animate-fade-in-up"
+        className="relative -top-6 text-4xl sm:text-5xl lg:text-6xl font-extrabold text-center mb-8 pt-16
+                   text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-magenta
+                   drop-shadow-[0_0_8px_rgba(255,0,255,0.5)] animate-fade-in-up"
       >
         Catálogo
       </h1>
 
-      {/* Botones filtro */}
       <div className="flex justify-center space-x-4 mb-12 flex-wrap gap-2">
         <button
           onClick={() => setFiltro('Todo')}
@@ -148,12 +142,11 @@ export default function CursosPage() {
         </button>
       </div>
 
-      {/* Cursos */}
       {(filtro === 'Todo' || filtro === 'Cursos' || filtro === 'CAT' || filtro === 'Dynamis') && (
         <div className="mb-12">
           <h2
             className="text-3xl sm:text-4xl font-extrabold text-left mb-8
-                           text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-lime-400"
+                       text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-lime-400"
           >
             Cursos
           </h2>
@@ -186,23 +179,21 @@ export default function CursosPage() {
                     <p className="text-xs text-gray-400 text-center mb-2 truncate w-full px-2">
                       {curso.descripcion}
                     </p>
-
-                    {/* Contenido que empuja el botón hacia abajo */}
                     <div className="mt-auto">
                       <p className="font-semibold text-base text-lime-400 mb-2 text-center">
                         💲 Precio: <span className="text-gray-200">${curso.precio}</span>
                       </p>
                       <Link href={`/cursos/${curso.id}`} passHref>
                         <button className="relative w-full md:w-auto px-4 py-2 rounded-md bg-transparent border-2 border-cyan-400 text-gray-200 font-bold text-sm
-                                             uppercase tracking-wider overflow-hidden group
-                                             transition-colors duration-300">
+                                           uppercase tracking-wider overflow-hidden group
+                                           transition-colors duration-300">
                           <span className="relative z-10 transition-colors duration-300 group-hover:text-gray-950">
                             Ver Detalles
                           </span>
                           <span className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-magenta-400 transform scale-x-0
-                                             group-hover:scale-x-100 transition-transform duration-500 origin-left"></span>
+                                           group-hover:scale-x-100 transition-transform duration-500 origin-left"></span>
                           <span className="absolute inset-0 border border-gray-200 opacity-0 group-hover:opacity-100 animate-pulse-light
-                                             transition-opacity duration-300"></span>
+                                           transition-opacity duration-300"></span>
                         </button>
                       </Link>
                     </div>
@@ -214,12 +205,11 @@ export default function CursosPage() {
         </div>
       )}
 
-      {/* Servicios */}
       {(filtro === 'Todo' || filtro === 'Servicios' || filtro === 'CAT' || filtro === 'Dynamis') && (
         <div className="mb-12">
           <h2
             className="text-3xl sm:text-4xl font-extrabold text-left mb-8
-                           text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-cyan-400"
+                       text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-cyan-400"
           >
             Servicios
           </h2>
@@ -252,23 +242,21 @@ export default function CursosPage() {
                     <p className="text-xs text-gray-400 text-center mb-2 truncate w-full px-2">
                       {servicio.descripcion}
                     </p>
-
-                    {/* Botón alineado al final */}
                     <div className="mt-auto">
                       <p className="font-semibold text-base text-lime-400 mb-2 text-center">
                         💲 Precio: <span className="text-gray-200">${servicio.precio}</span>
                       </p>
                       <Link href={`/cursos/${servicio.id}`} passHref>
                         <button className="relative w-full md:w-auto px-4 py-2 rounded-md bg-transparent border-2 border-cyan-400 text-gray-200 font-bold text-sm
-                                             uppercase tracking-wider overflow-hidden group
-                                             transition-colors duration-300">
+                                           uppercase tracking-wider overflow-hidden group
+                                           transition-colors duration-300">
                           <span className="relative z-10 transition-colors duration-300 group-hover:text-gray-950">
                             Ver Detalles
                           </span>
                           <span className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-magenta-400 transform scale-x-0
-                                             group-hover:scale-x-100 transition-transform duration-500 origin-left"></span>
+                                           group-hover:scale-x-100 transition-transform duration-500 origin-left"></span>
                           <span className="absolute inset-0 border border-gray-200 opacity-0 group-hover:opacity-100 animate-pulse-light
-                                             transition-opacity duration-300"></span>
+                                           transition-opacity duration-300"></span>
                         </button>
                       </Link>
                     </div>
