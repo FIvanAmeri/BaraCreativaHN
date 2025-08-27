@@ -28,62 +28,62 @@ export function useDatosCurso(): UseDatosCursoResult {
   useEffect(() => {
     let cancelled = false;
 
-    const fetchDatos = async () => {
-      setLoading(true);
+    const fetchCurso = async () => {
       try {
         const resCurso = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cursos/${cursoId}`, {
           credentials: 'include',
         });
-
-        if (resCurso.status === 401) {
-          if (!cancelled) {
-            toast.error('Necesitas iniciar sesión o registrarte para continuar.', { duration: 3000 });
-            redirectTimeout.current = setTimeout(() => router.push('/login'), 3000);
-          }
-          return;
-        }
-
         if (!resCurso.ok) {
           throw new Error('No se pudo cargar el programa.');
         }
 
         const dataCurso: Curso = await resCurso.json();
-        dataCurso.precio = parseFloat(String(dataCurso.precio)) || 0;
-        dataCurso.fechaInicio = dataCurso.fechaInicio ? new Date(dataCurso.fechaInicio) : null;
-        if (!cancelled) setCurso(dataCurso);
-
+        if (!cancelled) {
+          setCurso(dataCurso);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          const message = err instanceof Error ? err.message : 'Error desconocido al cargar los datos del curso.';
+          setError(message);
+          toast.error('Error al cargar la información del programa.');
+        }
+      }
+    };
+    
+    const fetchUsuario = async () => {
+      try {
         const resUsuario = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/usuarios/me`, {
           credentials: 'include',
         });
-
-        if (resUsuario.status === 401) {
-          if (!cancelled) {
-            toast.error('Necesitas iniciar sesión o registrarte para continuar.', { duration: 3000 });
-            redirectTimeout.current = setTimeout(() => router.push('/login'), 3000);
-          }
-          return;
-        }
-
         if (!resUsuario.ok) {
-          const errorData = await resUsuario.json();
-          console.error('API Error:', errorData);
+          if (resUsuario.status === 401) {
+            if (!cancelled) {
+              toast.error('Necesitas iniciar sesión o registrarte para continuar.', { duration: 3000 });
+              redirectTimeout.current = setTimeout(() => router.push('/login'), 3000);
+            }
+          }
           throw new Error('No se pudo obtener el usuario.');
         }
 
         const usuario = await resUsuario.json();
-        if (!cancelled) setUsuarioId(usuario.id);
+        if (!cancelled) {
+          setUsuarioId(usuario.id);
+        }
       } catch (err) {
         if (!cancelled) {
-          const message = err instanceof Error ? err.message : 'Error desconocido al cargar los datos.';
+          const message = err instanceof Error ? err.message : 'Error desconocido al obtener el usuario.';
           setError(message);
-          toast.error('Error al cargar la información del programa. Intenta de nuevo más tarde.');
         }
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     };
 
-    fetchDatos();
+    setLoading(true);
+    fetchCurso();
+    fetchUsuario();
 
     return () => {
       cancelled = true;
