@@ -15,15 +15,22 @@ export default function CursosPage() {
     const fetchCursosData = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/cursos`, {
+        setError(null); 
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cursos`, {
           credentials: 'include',
         });
+        
         if (!response.ok) {
           throw new Error('Error al obtener la lista de cursos');
         }
+        
         const fetchedCursos: Curso[] = await response.json();
-        setCursos(fetchedCursos);
-        setError(null);
+        
+        if (fetchedCursos.length === 0) {
+          setError('No hay cursos disponibles. Vuelve a intentarlo en un momento.');
+        } else {
+          setCursos(fetchedCursos);
+        }
       } catch (err: unknown) {
         console.error(err);
         if (err instanceof Error) {
@@ -32,9 +39,6 @@ export default function CursosPage() {
           setError('Ocurrió un error desconocido.');
         }
       } finally {
-        if (!cursos.length) {
-          setError('No hay cursos disponibles. Vuelve a intentarlo en un momento.');
-        }
         setLoading(false);
       }
     };
