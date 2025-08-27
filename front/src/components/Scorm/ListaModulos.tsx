@@ -1,4 +1,4 @@
-import { EstadoModuloUsuario } from '@/app/types/scorm-types'; // Importación corregida
+import { EstadoModuloUsuario } from '@/app/types/scorm-types';
 
 interface ListaModulosProps {
     modulos: EstadoModuloUsuario[]; 
