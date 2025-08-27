@@ -40,22 +40,30 @@ export default function CursosPage() {
   }, []);
 
 
-  const cursosFiltradosPorCategoria = cursos.filter(curso => {
-    if (filtro === 'Todo') {
-      return true;
-    }
-  
+  const cursosFiltradosPorCategoria = cursos.filter((curso) => {
+    if (filtro === 'Todo') return true;
+
     if (filtro === 'CAT' || filtro === 'Dynamis') {
       return curso.categoria?.toLowerCase() === filtro.toLowerCase();
+    }
+
+    if (filtro === 'Cursos') {
+      return curso.claseItem === 'curso';
+    }
+
+    if (filtro === 'Servicios') {
+      return curso.claseItem === 'servicio';
     }
 
     return true;
   });
 
-
-  const cursosCursos = cursosFiltradosPorCategoria.filter(curso => curso.claseItem === 'curso');
-  const cursosServicios = cursosFiltradosPorCategoria.filter(curso => curso.claseItem === 'servicio');
-
+  const cursosCursos = cursosFiltradosPorCategoria.filter(
+    (curso) => curso.claseItem === 'curso'
+  );
+  const cursosServicios = cursosFiltradosPorCategoria.filter(
+    (curso) => curso.claseItem === 'servicio'
+  );
 
   if (loading) {
     return (
@@ -79,65 +87,89 @@ export default function CursosPage() {
     );
   }
 
-  const baseButtonClasses = "px-6 py-2 rounded-full font-bold text-lg transition-colors duration-300";
-  const activeClasses = "bg-cyan-500 text-gray-900 shadow-md transform scale-105";
-  const inactiveClasses = "bg-gray-800 text-gray-200 hover:bg-gray-700";
+  const baseButtonClasses =
+    'px-6 py-2 rounded-full font-bold text-lg transition-colors duration-300';
+  const activeClasses =
+    'bg-cyan-500 text-gray-900 shadow-md transform scale-105';
+  const inactiveClasses =
+    'bg-gray-800 text-gray-200 hover:bg-gray-700';
 
   return (
     <div className="bg-gray-950 min-h-screen text-gray-200 py-16 px-4 md:px-8">
-      <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-center mb-8 pt-16
+      <h1
+        className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-center mb-8 pt-16
                        text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-magenta
-                       drop-shadow-[0_0_8px_rgba(255,0,255,0.5)] animate-fade-in-up">
+                       drop-shadow-[0_0_8px_rgba(255,0,255,0.5)] animate-fade-in-up"
+      >
         Catálogo
       </h1>
 
+ 
       <div className="flex justify-center space-x-4 mb-12 flex-wrap gap-2">
         <button
           onClick={() => setFiltro('Todo')}
-          className={`${baseButtonClasses} ${filtro === 'Todo' ? activeClasses : inactiveClasses}`}
+          className={`${baseButtonClasses} ${
+            filtro === 'Todo' ? activeClasses : inactiveClasses
+          }`}
         >
           Todo
         </button>
         <button
           onClick={() => setFiltro('Cursos')}
-          className={`${baseButtonClasses} ${filtro === 'Cursos' ? activeClasses : inactiveClasses}`}
+          className={`${baseButtonClasses} ${
+            filtro === 'Cursos' ? activeClasses : inactiveClasses
+          }`}
         >
           Cursos
         </button>
         <button
           onClick={() => setFiltro('Servicios')}
-          className={`${baseButtonClasses} ${filtro === 'Servicios' ? activeClasses : inactiveClasses}`}
+          className={`${baseButtonClasses} ${
+            filtro === 'Servicios' ? activeClasses : inactiveClasses
+          }`}
         >
           Servicios
         </button>
         <button
           onClick={() => setFiltro('CAT')}
-          className={`${baseButtonClasses} ${filtro === 'CAT' ? activeClasses : inactiveClasses}`}
+          className={`${baseButtonClasses} ${
+            filtro === 'CAT' ? activeClasses : inactiveClasses
+          }`}
         >
           CAT
         </button>
         <button
           onClick={() => setFiltro('Dynamis')}
-          className={`${baseButtonClasses} ${filtro === 'Dynamis' ? activeClasses : inactiveClasses}`}
+          className={`${baseButtonClasses} ${
+            filtro === 'Dynamis' ? activeClasses : inactiveClasses
+          }`}
         >
           Dynamis
         </button>
       </div>
 
 
-      {(filtro === 'Todo' || filtro === 'Cursos') && (
+      {(filtro === 'Todo' || filtro === 'Cursos' || filtro === 'CAT' || filtro === 'Dynamis') && (
         <div className="mb-12">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-center mb-8
-                           text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-lime-400">
+          <h2
+            className="text-3xl sm:text-4xl font-extrabold text-left mb-8
+                           text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-lime-400"
+          >
             Cursos
           </h2>
           {cursosCursos.length === 0 ? (
-            <p className="text-center text-gray-400">No hay cursos disponibles para este filtro.</p>
+            <p className="text-left text-gray-400">
+              No hay cursos disponibles para este filtro.
+            </p>
           ) : (
-            <div className="flex flex-wrap gap-4 justify-center">
-              {cursosCursos.map(curso => (
-                <PanelTarjeta key={curso.id} claseAdicional="w-full sm:w-1/2 md:w-1/3 lg:w-1/5" conEfectoEscaneo>
-                  <div className="flex flex-col h-full items-center p-4">
+            <div className="flex flex-wrap gap-4 justify-start">
+              {cursosCursos.map((curso) => (
+                <PanelTarjeta
+                  key={curso.id}
+                  claseAdicional="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 flex flex-col"
+                  conEfectoEscaneo
+                >
+                  <div className="flex flex-col h-full p-4">
                     {curso.imagenCurso && typeof curso.imagenCurso === 'string' && (
                       <div className="relative w-full h-32 mb-4">
                         <img
@@ -154,9 +186,10 @@ export default function CursosPage() {
                     <p className="text-xs text-gray-400 text-center mb-2 truncate w-full px-2">
                       {curso.descripcion}
                     </p>
-                    
-                    <div className="flex flex-col items-center w-full mt-auto flex-grow justify-end">
-                      <p className="font-semibold text-base text-lime-400 mb-2">
+
+              
+                    <div className="mt-auto">
+                      <p className="font-semibold text-base text-lime-400 mb-2 text-center">
                         💲 Precio: <span className="text-gray-200">${curso.precio}</span>
                       </p>
                       <Link href={`/cursos/${curso.id}`} passHref>
@@ -181,20 +214,28 @@ export default function CursosPage() {
         </div>
       )}
 
-
-      {(filtro === 'Todo' || filtro === 'Servicios') && (
+ 
+      {(filtro === 'Todo' || filtro === 'Servicios' || filtro === 'CAT' || filtro === 'Dynamis') && (
         <div className="mb-12">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-center mb-8
-                           text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-cyan-400">
+          <h2
+            className="text-3xl sm:text-4xl font-extrabold text-left mb-8
+                           text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-cyan-400"
+          >
             Servicios
           </h2>
           {cursosServicios.length === 0 ? (
-            <p className="text-center text-gray-400">No hay servicios disponibles para este filtro.</p>
+            <p className="text-left text-gray-400">
+              No hay servicios disponibles para este filtro.
+            </p>
           ) : (
-            <div className="flex flex-wrap gap-4 justify-center">
-              {cursosServicios.map(servicio => (
-                <PanelTarjeta key={servicio.id} claseAdicional="w-full sm:w-1/2 md:w-1/3 lg:w-1/5" conEfectoEscaneo>
-                  <div className="flex flex-col h-full items-center p-4">
+            <div className="flex flex-wrap gap-4 justify-start">
+              {cursosServicios.map((servicio) => (
+                <PanelTarjeta
+                  key={servicio.id}
+                  claseAdicional="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 flex flex-col"
+                  conEfectoEscaneo
+                >
+                  <div className="flex flex-col h-full p-4">
                     {servicio.imagenCurso && typeof servicio.imagenCurso === 'string' && (
                       <div className="relative w-full h-32 mb-4">
                         <img
@@ -211,9 +252,10 @@ export default function CursosPage() {
                     <p className="text-xs text-gray-400 text-center mb-2 truncate w-full px-2">
                       {servicio.descripcion}
                     </p>
-                    
-                    <div className="flex flex-col items-center w-full mt-auto flex-grow justify-end">
-                      <p className="font-semibold text-base text-lime-400 mb-2">
+
+            
+                    <div className="mt-auto">
+                      <p className="font-semibold text-base text-lime-400 mb-2 text-center">
                         💲 Precio: <span className="text-gray-200">${servicio.precio}</span>
                       </p>
                       <Link href={`/cursos/${servicio.id}`} passHref>
