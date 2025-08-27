@@ -34,23 +34,30 @@ export class UsuariosController {
 
   constructor(private readonly usuariosService: UsuariosService) {}
 
-  @Get()
+  @Get('me')
   @UseGuards(JwtAuthGuard)
-  async getAll(@UsuarioAutenticado() usuario: Usuario): Promise<Usuario[] | Partial<Usuario>> {
-
-    if (usuario.esAdmin) {
-      this.logger.log(`Usuario administrador (${usuario.correoElectronico}) ha accedido a la lista completa de usuarios.`);
-      return this.usuariosService.findAll();
-    } else {
-      this.logger.log(`Usuario regular (${usuario.correoElectronico}) ha accedido a su propio perfil.`);
-      const { password, ...usuarioSinPassword } = usuario;
-      return usuarioSinPassword; 
+  async getMyProfile(@UsuarioAutenticado() usuario: Usuario): Promise<Partial<Usuario>> {
+    this.logger.log(`Petición para el perfil de usuario recibida para: ${usuario.correoElectronico}`);
+    if (!usuario || !usuario.id) {
+        throw new ForbiddenException('No se pudo obtener la información del usuario.');
     }
+  
+    const { password, ...usuarioSinPassword } = usuario;
+    return usuarioSinPassword;
+  }
+
+
+  @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
+  async getAll(@UsuarioAutenticado() usuario: Usuario): Promise<Usuario[]> {
+    this.logger.log(`Usuario administrador (${usuario.correoElectronico}) ha accedido a la lista completa de usuarios.`);
+    return this.usuariosService.findAll();
   }
 
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin') 
+  @Roles('admin')
   @Get('admin')
   @HttpCode(HttpStatus.OK)
   async findAllAdmin(@Request() req): Promise<Usuario[]> {

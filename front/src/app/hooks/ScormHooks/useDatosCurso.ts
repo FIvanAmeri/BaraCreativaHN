@@ -28,7 +28,7 @@ export function useDatosCurso(): UseDatosCursoResult {
   useEffect(() => {
     let cancelled = false;
 
-    // Función para obtener la información del curso
+
     const fetchCurso = async () => {
       try {
         const resCurso = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cursos/${cursoId}`, {
@@ -40,7 +40,6 @@ export function useDatosCurso(): UseDatosCursoResult {
 
         const dataCurso: Curso = await resCurso.json();
         if (!cancelled) {
-          // Asegúrate de parsear el precio y la fecha si es necesario aquí
           const parsedData = {
             ...dataCurso,
             precio: parseFloat(String(dataCurso.precio)) || 0,
@@ -57,7 +56,7 @@ export function useDatosCurso(): UseDatosCursoResult {
       }
     };
     
-    // Función para obtener la información del usuario
+
     const fetchUsuario = async () => {
       try {
         const resUsuario = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/usuarios/me`, {
