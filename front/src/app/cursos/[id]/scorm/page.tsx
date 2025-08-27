@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { ToastContainer } from 'react-toastify';
+import { Toaster } from 'react-hot-toast';
 import React, { useState, useEffect } from 'react';
 
 import { useCursoScorm } from '@/app/hooks/Scorm/useCursoScorm';
@@ -21,6 +21,7 @@ export default function ScormPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+ 
   useEffect(() => {
     const fetchCursoData = async () => {
       try {
@@ -48,7 +49,7 @@ export default function ScormPage() {
     fetchCursoData();
   }, [cursoId]);
 
-
+ 
   const {
     modulosEstadoUsuario,
     currentModuleIndex,
@@ -62,11 +63,13 @@ export default function ScormPage() {
     disableNext,
   } = useCursoScorm(curso?.modulos || []);
 
+
   if (loading) return <p className="text-center mt-8 text-lg text-gray-700">Cargando curso y módulos...</p>;
   if (error) return <p className="text-red-600 text-center mt-8 text-lg font-bold">Error al cargar el curso: {error}</p>;
   if (!curso) return <p className="text-center mt-8 text-lg text-gray-700">No hay contenido disponible para este curso.</p>;
   if (!currentModule) return <p className="text-center mt-8 text-lg text-gray-700">No hay contenido disponible para este módulo.</p>;
 
+ 
   const tipoContenido = currentModule.tipo !== null ? currentModule.tipo : 'texto';
   const contenidoTexto = currentModule.tipo === 'texto' ? currentModule.descripcion : undefined;
 
@@ -83,6 +86,7 @@ export default function ScormPage() {
           />
         </div>
 
+     
         <div className="lg:w-3/4 bg-white rounded-lg shadow-lg p-6 flex flex-col">
           <MensajeFinal mostrar={cursoCompletadoGeneral} />
 
@@ -104,7 +108,7 @@ export default function ScormPage() {
           />
         </div>
       </div>
-      <ToastContainer />
+      <Toaster />
     </>
   );
 }

@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { PanelTarjeta } from '@/components/ScormID/PanelTarjeta';
-import { ListaModulos } from '@/components/ScormID/ListaModulos'; 
+import { ListaModulos } from '@/components/ScormID/ListaModulos';
 import { SeccionPago } from '@/components/ScormID/SeccionPago';
 import { useDatosCurso } from '@/app/hooks/ScormHooks/useDatosCurso';
 import { Modulo } from '@/app/types/curso';
@@ -42,7 +42,6 @@ export default function CursoDetalle() {
       </div>
     );
   }
-
 
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
   
