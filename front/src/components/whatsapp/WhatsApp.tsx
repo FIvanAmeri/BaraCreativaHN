@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import OpcionesAsistencia from "./OpcionesAsistencia";
-import Image from "next/image";
+import React, { useState } from 'react';
+import OpcionesAsistencia from './OpcionesAsistencia';
+import Image from 'next/image';
 
 const WhatsApp: React.FC = () => {
   const [mostrarOpciones, setMostrarOpciones] = useState(false);
@@ -11,7 +11,6 @@ const WhatsApp: React.FC = () => {
 
   return (
     <div className="fixed bottom-2 left-2 flex flex-col items-start z-50">
-
       <OpcionesAsistencia visible={mostrarOpciones} />
       <button
         onClick={alternarOpciones}

@@ -4,8 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Curso } from '@/app/types/curso';
 import { PanelTarjeta } from '@/components/ScormID/PanelTarjeta';
-import { FaPlay, FaMicrochip } from 'react-icons/fa'; 
-
+import { FaPlay, FaMicrochip } from 'react-icons/fa';
 
 export default function CursosPage() {
   const [cursos, setCursos] = useState<Curso[]>([]);
@@ -33,6 +32,9 @@ export default function CursosPage() {
           setError('Ocurrió un error desconocido.');
         }
       } finally {
+        if (!cursos.length) {
+          setError('No hay cursos disponibles. Vuelve a intentarlo en un momento.');
+        }
         setLoading(false);
       }
     };
@@ -60,22 +62,13 @@ export default function CursosPage() {
       </div>
     );
   }
-
-
-  if (cursos.length === 0) {
-    return (
-      <div className="flex justify-center items-center h-screen bg-dark-bg text-text-light">
-        <p className="text-xl">No se encontraron cursos disponibles. ¡Creemos uno!</p>
-      </div>
-    );
-  }
-
+  
   return (
-    <div className="bg-dark-bg min-h-screen text-text-light py-16 px-4 md:px-8">
-      <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-center mb-12
+    <div className="bg-dark-bg min-h-screen text-text-light pt-8 px-4 md:px-8 pb-16">
+      <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-center mb-8
                      text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-magenta
                      drop-shadow-cyber-glow-magenta animate-fade-in-up">
-        Catálogo de Programas
+        Catálogo
       </h1>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
@@ -124,4 +117,3 @@ export default function CursosPage() {
     </div>
   );
 }
-

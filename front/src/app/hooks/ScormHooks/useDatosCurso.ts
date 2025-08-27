@@ -65,6 +65,8 @@ export function useDatosCurso(): UseDatosCursoResult {
         }
 
         if (!resUsuario.ok) {
+          const errorData = await resUsuario.json();
+          console.error('API Error:', errorData);
           throw new Error('No se pudo obtener el usuario.');
         }
 
