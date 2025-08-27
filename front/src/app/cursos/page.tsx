@@ -141,8 +141,9 @@ export default function CursosPage() {
                         <img
                           src={curso.imagenCurso}
                           alt={`Imagen de ${curso.titulo}`}
-                          className="w-full h-full object-cover rounded-md border border-gray-700 shadow-lg transition-colors duration-300"
+                          className="w-full h-full object-contain rounded-md border border-gray-700 shadow-lg transition-colors duration-300"
                         />
+
                       ) : (
                         <div className="w-full h-full bg-gray-800 rounded-md flex items-center justify-center text-gray-400">
                           Sin imagen
@@ -201,8 +202,9 @@ export default function CursosPage() {
                         <img
                           src={servicio.imagenCurso}
                           alt={`Imagen de ${servicio.titulo}`}
-                          className="w-full h-full object-cover rounded-md border border-gray-700 shadow-lg transition-colors duration-300"
+                          className="w-full h-full object-contain rounded-md border border-gray-700 shadow-lg transition-colors duration-300"
                         />
+
                       ) : (
                         <div className="w-full h-full bg-gray-800 rounded-md flex items-center justify-center text-gray-400">
                           Sin imagen
