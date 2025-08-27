@@ -1,3 +1,5 @@
+// src/hooks/useCursoForm.ts
+
 "use client";
 
 import { useEffect, useState, ChangeEvent, FormEvent } from "react";
@@ -188,7 +190,7 @@ export default function useCursoForm(
         formData.append("imagen", datos.imagenCurso);
 
         const resImg = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/cursos/${cursoGuardado.id}/imagen`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/cursos/${cursoGuardado.id}/imagen`, // Corregir aquí
           {
             method: "POST",
             body: formData,
@@ -222,5 +224,5 @@ export default function useCursoForm(
     handleModuloChange,
     eliminarModulo,
     handleSubmit,
-  }
+  };
 }
