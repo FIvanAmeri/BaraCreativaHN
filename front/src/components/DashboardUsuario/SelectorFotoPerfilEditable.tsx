@@ -1,9 +1,12 @@
 'use client';
 
+import Image from "next/image";
 import React, { useRef } from "react";
+import { FaUserCircle } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
 
 interface Props {
-  fotoPerfilInicial?: string;
+  fotoPerfilInicial: string | null;
   editable: boolean;
   onFotoChange: (file: File | null) => void;
 }
@@ -13,42 +16,48 @@ export default function SelectorFotoPerfilEditable({
   editable,
   onFotoChange,
 }: Props) {
-  const inputFileRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleClickImagen = () => {
-    if (editable) inputFileRef.current?.click();
+  const manejarClick = () => {
+    if (editable) {
+      inputRef.current?.click();
+    }
   };
 
-  const handleChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!editable) return;
-    const file = e.target.files ? e.target.files[0] : null;
-    onFotoChange(file);
+  const manejarCambio = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      onFotoChange(e.target.files[0]);
+    } else {
+      onFotoChange(null);
+    }
   };
 
   return (
-    <div className="flex justify-center">
+    <div className="relative w-40 h-40 mx-auto rounded-full overflow-hidden border-4 border-gray-600 shadow-xl group cursor-pointer transition-all duration-300 transform hover:scale-105" onClick={manejarClick}>
       <input
         type="file"
-        accept="image/*"
-        ref={inputFileRef}
+        ref={inputRef}
         className="hidden"
-        onChange={handleChangeFile}
+        onChange={manejarCambio}
+        accept="image/*"
+        disabled={!editable}
       />
+      
       {fotoPerfilInicial ? (
         <img
           src={fotoPerfilInicial}
-          alt="Foto de perfil"
-          onClick={handleClickImagen}
-          className={`w-28 h-28 rounded-full object-cover cursor-${editable ? "pointer" : "default"}`}
-          title={editable ? "Click para cambiar foto" : undefined}
+          alt="Foto de Perfil"
+          className="w-full h-full object-cover"
         />
       ) : (
-        <div
-          onClick={handleClickImagen}
-          className={`w-28 h-28 rounded-full bg-gray-500 flex items-center justify-center text-white cursor-${editable ? "pointer" : "default"}`}
-          title={editable ? "Click para agregar foto" : undefined}
-        >
-          Sin foto
+        <div className="w-full h-full flex items-center justify-center bg-gray-700 text-gray-400">
+          <FaUserCircle className="w-2/3 h-2/3" />
+        </div>
+      )}
+
+      {editable && (
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <MdEdit className="text-white text-3xl" />
         </div>
       )}
     </div>

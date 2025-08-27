@@ -117,8 +117,9 @@ export default function PerfilUsuarioEditable({ usuario, onActualizar }: Props) 
         Bienvenido, {nombreCompleto}
       </h1>
 
+
       <SelectorFotoPerfilEditable
-        fotoPerfilInicial={previewFoto}
+        fotoPerfilInicial={previewFoto ?? null}
         editable={editando}
         onFotoChange={manejarCambioFoto}
       />
