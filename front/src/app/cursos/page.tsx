@@ -73,12 +73,13 @@ export default function CursosPage() {
   return (
     <div className="bg-gray-950 min-h-screen text-gray-200 py-16 px-4 md:px-8">
       <h1
-        className="relative -top-6 text-4xl sm:text-5xl lg:text-6xl font-extrabold text-center mb-8 pt-16
-                   text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-magenta
-                   drop-shadow-[0_0_8px_rgba(255,0,255,0.5)] animate-fade-in-up"
+        className="relative -top-12 text-4xl sm:text-5xl lg:text-6xl font-extrabold text-center mb-8 pt-16
+             text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-magenta
+             drop-shadow-[0_0_8px_rgba(255,0,255,0.5)] animate-fade-in-up"
       >
         Catálogo
       </h1>
+
 
       <div className="flex justify-center space-x-4 mb-12 flex-wrap gap-2">
         <button
