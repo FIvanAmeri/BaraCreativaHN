@@ -1,4 +1,3 @@
-// app/types/curso.ts
 
 export enum ClaseItem {
   CURSO = 'curso',
