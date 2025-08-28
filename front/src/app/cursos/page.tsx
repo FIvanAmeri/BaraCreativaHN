@@ -59,10 +59,6 @@ export default function CursosPage() {
     }
   });
 
-  // Dividimos los cursos filtrados en 'Cursos' y 'Servicios'
-  const cursosCursos = cursosFiltrados.filter((curso) => curso.claseItem === 'curso');
-  const cursosServicios = cursosFiltrados.filter((curso) => curso.claseItem === 'servicio');
-
   // Vista de carga
   if (loading) {
     return (
@@ -126,32 +122,32 @@ export default function CursosPage() {
         </button>
       </div>
 
-      {/* Sección para Cursos */}
+      {/* Sección unificada para Cursos y Servicios */}
       <div className="mb-12">
         <h2
           className="text-3xl sm:text-4xl font-extrabold text-left mb-8
             text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-lime-400"
         >
-          Cursos
+          {filtro === 'Servicios' ? 'Servicios' : 'Cursos'}
         </h2>
-        {cursosCursos.length === 0 ? (
-          <p className="text-left text-gray-400">No hay cursos disponibles para este filtro.</p>
+        {cursosFiltrados.length === 0 ? (
+          <p className="text-left text-gray-400">No hay elementos disponibles para este filtro.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {cursosCursos.map((curso) => (
+            {cursosFiltrados.map((item) => (
               <PanelTarjeta
-                key={curso.id}
+                key={item.id}
                 claseAdicional="rounded-lg shadow-2xl transition-all duration-500 ease-in-out transform hover:scale-105 hover:ring-2 hover:ring-cyan-500/50 relative overflow-hidden group"
               >
                 <Link
-                  href={`/cursos/${curso.id}`}
+                  href={`/cursos/${item.id}`}
                   className="flex flex-col h-full hover:cursor-pointer"
                 >
                   <div className="w-full relative aspect-video rounded-t-lg overflow-hidden border-b border-gray-700 bg-gray-800 flex items-center justify-center">
-                    {curso.imagenCurso && typeof curso.imagenCurso === 'string' ? (
+                    {item.imagenCurso && typeof item.imagenCurso === 'string' ? (
                       <img
-                        src={curso.imagenCurso}
-                        alt={`Imagen de ${curso.titulo}`}
+                        src={item.imagenCurso}
+                        alt={`Imagen de ${item.titulo}`}
                         className="w-full h-full object-contain"
                       />
                     ) : (
@@ -162,58 +158,10 @@ export default function CursosPage() {
                   </div>
                   <div className="flex flex-col flex-grow p-4">
                     <h2 className="text-xl md:text-2xl font-bold text-left text-cyan-400 line-clamp-2 leading-tight">
-                      {curso.titulo}
+                      {item.titulo}
                     </h2>
                     <p className="text-sm text-gray-400 text-left line-clamp-3 mt-2 flex-grow">
-                      {curso.descripcion}
-                    </p>
-                  </div>
-                </Link>
-              </PanelTarjeta>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Sección para Servicios */}
-      <div className="mb-12">
-        <h2
-          className="text-3xl sm:text-4xl font-extrabold text-left mb-8
-            text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-cyan-400"
-        >
-          Servicios
-        </h2>
-        {cursosServicios.length === 0 ? (
-          <p className="text-left text-gray-400">No hay servicios disponibles para este filtro.</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {cursosServicios.map((servicio) => (
-              <PanelTarjeta
-                key={servicio.id}
-                claseAdicional="rounded-lg shadow-2xl transition-all duration-500 ease-in-out transform hover:scale-105 hover:ring-2 hover:ring-cyan-500/50 relative overflow-hidden group"
-              >
-                <Link
-                  href={`/cursos/${servicio.id}`}
-                  className="flex flex-col h-full hover:cursor-pointer"
-                >
-                  <div className="w-full relative aspect-video rounded-t-lg overflow-hidden border-b border-gray-700 bg-gray-800 flex items-center justify-center">
-                    {servicio.imagenCurso && typeof servicio.imagenCurso === 'string' ? (
-                      <img
-                        src={servicio.imagenCurso}
-                        alt={`Imagen de ${servicio.titulo}`}
-                        className="w-full h-full object-contain"
-                      />
-                    ) : (
-                      <div className="text-gray-400">Sin imagen</div>
-                    )}
-                    <div className="absolute inset-0 bg-gray-900 opacity-0 group-hover:opacity-70 transition-opacity duration-300"></div>
-                  </div>
-                  <div className="flex flex-col flex-grow p-4">
-                    <h2 className="text-xl md:text-2xl font-bold text-left text-cyan-400 line-clamp-2 leading-tight">
-                      {servicio.titulo}
-                    </h2>
-                    <p className="text-sm text-gray-400 text-left line-clamp-3 mt-2 flex-grow">
-                      {servicio.descripcion}
+                      {item.descripcion}
                     </p>
                   </div>
                 </Link>
