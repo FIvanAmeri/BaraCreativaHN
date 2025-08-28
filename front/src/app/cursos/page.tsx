@@ -146,9 +146,9 @@ export default function CursosPage() {
               >
                 <Link
                   href={`/cursos/${curso.id}`}
-                  className="flex flex-col h-full p-4 gap-4 hover:cursor-pointer"
+                  className="flex flex-col h-full p-4 gap-2 hover:cursor-pointer"
                 >
-                  <div className="w-full h-48 relative mb-4">
+                  <div className="w-full h-48 relative mb-2">
                     {curso.imagenCurso && typeof curso.imagenCurso === 'string' ? (
                       <img
                         src={curso.imagenCurso}
@@ -162,10 +162,10 @@ export default function CursosPage() {
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-70 rounded-md"></div>
                   </div>
-                  <h2 className="text-lg md:text-xl font-bold text-left text-cyan-400 line-clamp-2 h-[3rem] flex-grow">
+                  <h2 className="text-lg md:text-xl font-bold text-left text-cyan-400 h-12 overflow-hidden">
                     {curso.titulo}
                   </h2>
-                  <p className="text-xs text-gray-400 text-left line-clamp-3 h-[3.5rem] mt-auto">
+                  <p className="text-xs text-gray-400 text-left line-clamp-3 mt-auto">
                     {curso.descripcion}
                   </p>
                 </Link>
@@ -195,9 +195,9 @@ export default function CursosPage() {
               >
                 <Link
                   href={`/cursos/${servicio.id}`}
-                  className="flex flex-col h-full p-4 gap-4 hover:cursor-pointer"
+                  className="flex flex-col h-full p-4 gap-2 hover:cursor-pointer"
                 >
-                  <div className="w-full h-48 relative mb-4">
+                  <div className="w-full h-48 relative mb-2">
                     {servicio.imagenCurso && typeof servicio.imagenCurso === 'string' ? (
                       <img
                         src={servicio.imagenCurso}
@@ -211,10 +211,10 @@ export default function CursosPage() {
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-70 rounded-md"></div>
                   </div>
-                  <h2 className="text-lg md:text-xl font-bold text-left text-cyan-400 line-clamp-2 h-[3rem] flex-grow">
+                  <h2 className="text-lg md:text-xl font-bold text-left text-cyan-400 h-12 overflow-hidden">
                     {servicio.titulo}
                   </h2>
-                  <p className="text-xs text-gray-400 text-left line-clamp-3 h-[3.5rem] mt-auto">
+                  <p className="text-xs text-gray-400 text-left line-clamp-3 mt-auto">
                     {servicio.descripcion}
                   </p>
                 </Link>
