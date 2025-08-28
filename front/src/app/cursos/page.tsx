@@ -120,19 +120,20 @@ export default function CursosPage() {
               {cursosCursos.map((curso) => (
                 <PanelTarjeta
                   key={curso.id}
-                  claseAdicional="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 flex flex-col min-h-[450px]"
+                  claseAdicional="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 flex flex-col min-h-[400px]"
                   conEfectoEscaneo
                 >
                   <Link
                     href={`/cursos/${curso.id}`}
                     className="flex flex-col h-full p-4 hover:cursor-pointer"
                   >
+                    {/* Imagen */}
                     <div className="flex-shrink-0 w-full h-32 mb-4 relative">
                       {curso.imagenCurso && typeof curso.imagenCurso === 'string' ? (
                         <img
                           src={curso.imagenCurso}
                           alt={`Imagen de ${curso.titulo}`}
-                          className="w-full h-full object-contain rounded-md border border-gray-700 shadow-lg transition-colors duration-300"
+                          className="w-full h-full object-cover rounded-md border border-gray-700 shadow-lg transition-colors duration-300"
                         />
                       ) : (
                         <div className="w-full h-full bg-gray-800 rounded-md flex items-center justify-center text-gray-400">
@@ -141,12 +142,18 @@ export default function CursosPage() {
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-70 rounded-md"></div>
                     </div>
-                    <h2 className="text-lg md:text-xl font-bold text-center text-cyan-400 mb-2 line-clamp-3 h-[4.5rem]">
+
+                    {/* Título */}
+                    <h2 className="text-lg md:text-xl font-bold text-center text-cyan-400 mb-2 line-clamp-2 h-[3rem]">
                       {curso.titulo}
                     </h2>
-                    <p className="text-xs text-gray-400 text-center mb-2 line-clamp-4 h-[5.5rem] px-2">
+
+                    {/* Descripción */}
+                    <p className="text-xs text-gray-400 text-center mb-2 line-clamp-3 h-[3.5rem] px-2">
                       {curso.descripcion}
                     </p>
+
+                    {/* Precio al fondo */}
                     <p className="mt-auto font-semibold text-base text-lime-400 text-center">
                       💲 Precio: <span className="text-gray-200">${curso.precio}</span>
                     </p>
@@ -173,19 +180,20 @@ export default function CursosPage() {
               {cursosServicios.map((servicio) => (
                 <PanelTarjeta
                   key={servicio.id}
-                  claseAdicional="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 flex flex-col min-h-[450px]"
+                  claseAdicional="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 flex flex-col min-h-[400px]"
                   conEfectoEscaneo
                 >
                   <Link
                     href={`/cursos/${servicio.id}`}
                     className="flex flex-col h-full p-4 hover:cursor-pointer"
                   >
+                    {/* Imagen */}
                     <div className="flex-shrink-0 w-full h-32 mb-4 relative">
                       {servicio.imagenCurso && typeof servicio.imagenCurso === 'string' ? (
                         <img
                           src={servicio.imagenCurso}
                           alt={`Imagen de ${servicio.titulo}`}
-                          className="w-full h-full object-contain rounded-md border border-gray-700 shadow-lg transition-colors duration-300"
+                          className="w-full h-full object-cover rounded-md border border-gray-700 shadow-lg transition-colors duration-300"
                         />
                       ) : (
                         <div className="w-full h-full bg-gray-800 rounded-md flex items-center justify-center text-gray-400">
@@ -194,12 +202,18 @@ export default function CursosPage() {
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-70 rounded-md"></div>
                     </div>
-                    <h2 className="text-lg md:text-xl font-bold text-center text-cyan-400 mb-2 line-clamp-3 h-[4.5rem]">
+
+                    {/* Título */}
+                    <h2 className="text-lg md:text-xl font-bold text-center text-cyan-400 mb-2 line-clamp-2 h-[3rem]">
                       {servicio.titulo}
                     </h2>
-                    <p className="text-xs text-gray-400 text-center mb-2 line-clamp-4 h-[5.5rem] px-2">
+
+                    {/* Descripción */}
+                    <p className="text-xs text-gray-400 text-center mb-2 line-clamp-3 h-[3.5rem] px-2">
                       {servicio.descripcion}
                     </p>
+
+                    {/* Precio al fondo */}
                     <p className="mt-auto font-semibold text-base text-lime-400 text-center">
                       💲 Precio: <span className="text-gray-200">${servicio.precio}</span>
                     </p>
