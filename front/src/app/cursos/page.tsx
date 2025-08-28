@@ -137,37 +137,38 @@ export default function CursosPage() {
         {cursosCursos.length === 0 ? (
           <p className="text-left text-gray-400">No hay cursos disponibles para este filtro.</p>
         ) : (
-          <div className="flex flex-wrap gap-4 justify-start">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {cursosCursos.map((curso) => (
               <PanelTarjeta
                 key={curso.id}
-                claseAdicional="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 flex flex-col"
-                conEfectoEscaneo
+                claseAdicional="rounded-lg hover:shadow-xl transition-shadow duration-300 transform hover:scale-105"
               >
                 <Link
                   href={`/cursos/${curso.id}`}
-                  className="flex flex-col h-full p-4 gap-2 hover:cursor-pointer"
+                  className="flex flex-col h-full p-4 gap-3 hover:cursor-pointer"
                 >
-                  <div className="w-full h-48 relative mb-2">
+                  <div className="w-full h-56 relative mb-2 rounded-md overflow-hidden">
                     {curso.imagenCurso && typeof curso.imagenCurso === 'string' ? (
                       <img
                         src={curso.imagenCurso}
                         alt={`Imagen de ${curso.titulo}`}
-                        className="w-full h-full object-cover rounded-md border border-gray-700 shadow-lg transition-colors duration-300"
+                        className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gray-800 rounded-md flex items-center justify-center text-gray-400">
+                      <div className="w-full h-full bg-gray-800 flex items-center justify-center text-gray-400">
                         Sin imagen
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-70 rounded-md"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-70"></div>
                   </div>
-                  <h2 className="text-lg md:text-xl font-bold text-left text-cyan-400 h-12 overflow-hidden">
-                    {curso.titulo}
-                  </h2>
-                  <p className="text-xs text-gray-400 text-left line-clamp-3 mt-auto">
-                    {curso.descripcion}
-                  </p>
+                  <div className="flex flex-col flex-grow">
+                    <h2 className="text-lg md:text-xl font-bold text-left text-cyan-400 line-clamp-2">
+                      {curso.titulo}
+                    </h2>
+                    <p className="text-xs text-gray-400 text-left line-clamp-3 mt-auto">
+                      {curso.descripcion}
+                    </p>
+                  </div>
                 </Link>
               </PanelTarjeta>
             ))}
@@ -186,37 +187,38 @@ export default function CursosPage() {
         {cursosServicios.length === 0 ? (
           <p className="text-left text-gray-400">No hay servicios disponibles para este filtro.</p>
         ) : (
-          <div className="flex flex-wrap gap-4 justify-start">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {cursosServicios.map((servicio) => (
               <PanelTarjeta
                 key={servicio.id}
-                claseAdicional="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 flex flex-col"
-                conEfectoEscaneo
+                claseAdicional="rounded-lg hover:shadow-xl transition-shadow duration-300 transform hover:scale-105"
               >
                 <Link
                   href={`/cursos/${servicio.id}`}
-                  className="flex flex-col h-full p-4 gap-2 hover:cursor-pointer"
+                  className="flex flex-col h-full p-4 gap-3 hover:cursor-pointer"
                 >
-                  <div className="w-full h-48 relative mb-2">
+                  <div className="w-full h-56 relative mb-2 rounded-md overflow-hidden">
                     {servicio.imagenCurso && typeof servicio.imagenCurso === 'string' ? (
                       <img
                         src={servicio.imagenCurso}
                         alt={`Imagen de ${servicio.titulo}`}
-                        className="w-full h-full object-cover rounded-md border border-gray-700 shadow-lg transition-colors duration-300"
+                        className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gray-800 rounded-md flex items-center justify-center text-gray-400">
+                      <div className="w-full h-full bg-gray-800 flex items-center justify-center text-gray-400">
                         Sin imagen
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-70 rounded-md"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-70"></div>
                   </div>
-                  <h2 className="text-lg md:text-xl font-bold text-left text-cyan-400 h-12 overflow-hidden">
-                    {servicio.titulo}
-                  </h2>
-                  <p className="text-xs text-gray-400 text-left line-clamp-3 mt-auto">
-                    {servicio.descripcion}
-                  </p>
+                  <div className="flex flex-col flex-grow">
+                    <h2 className="text-lg md:text-xl font-bold text-left text-cyan-400 line-clamp-2">
+                      {servicio.titulo}
+                    </h2>
+                    <p className="text-xs text-gray-400 text-left line-clamp-3 mt-auto">
+                      {servicio.descripcion}
+                    </p>
+                  </div>
                 </Link>
               </PanelTarjeta>
             ))}
