@@ -141,31 +141,30 @@ export default function CursosPage() {
             {cursosCursos.map((curso) => (
               <PanelTarjeta
                 key={curso.id}
-                claseAdicional="rounded-lg hover:shadow-xl transition-shadow duration-300 transform hover:scale-105"
+                claseAdicional="rounded-lg shadow-2xl transition-all duration-500 ease-in-out transform hover:scale-105 hover:ring-2 hover:ring-cyan-500/50 relative overflow-hidden group"
               >
                 <Link
                   href={`/cursos/${curso.id}`}
-                  className="flex flex-col h-full p-4 gap-3 hover:cursor-pointer"
+                  className="flex flex-col h-full hover:cursor-pointer"
                 >
-                  <div className="w-full h-56 relative mb-2 rounded-md overflow-hidden">
+                  <div className="w-full relative aspect-video rounded-t-lg overflow-hidden border-b border-gray-700 bg-gray-800 flex items-center justify-center">
                     {curso.imagenCurso && typeof curso.imagenCurso === 'string' ? (
                       <img
                         src={curso.imagenCurso}
                         alt={`Imagen de ${curso.titulo}`}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gray-800 flex items-center justify-center text-gray-400">
-                        Sin imagen
-                      </div>
+                      <div className="text-gray-400">Sin imagen</div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-70"></div>
+                    {/* Overlay sutil al pasar el mouse */}
+                    <div className="absolute inset-0 bg-gray-900 opacity-0 group-hover:opacity-70 transition-opacity duration-300"></div>
                   </div>
-                  <div className="flex flex-col flex-grow">
-                    <h2 className="text-lg md:text-xl font-bold text-left text-cyan-400 line-clamp-2">
+                  <div className="flex flex-col flex-grow p-4">
+                    <h2 className="text-xl md:text-2xl font-bold text-left text-cyan-400 line-clamp-2 leading-tight">
                       {curso.titulo}
                     </h2>
-                    <p className="text-xs text-gray-400 text-left line-clamp-3 mt-auto">
+                    <p className="text-sm text-gray-400 text-left line-clamp-3 mt-2 flex-grow">
                       {curso.descripcion}
                     </p>
                   </div>
@@ -191,31 +190,29 @@ export default function CursosPage() {
             {cursosServicios.map((servicio) => (
               <PanelTarjeta
                 key={servicio.id}
-                claseAdicional="rounded-lg hover:shadow-xl transition-shadow duration-300 transform hover:scale-105"
+                claseAdicional="rounded-lg shadow-2xl transition-all duration-500 ease-in-out transform hover:scale-105 hover:ring-2 hover:ring-cyan-500/50 relative overflow-hidden group"
               >
                 <Link
                   href={`/cursos/${servicio.id}`}
-                  className="flex flex-col h-full p-4 gap-3 hover:cursor-pointer"
+                  className="flex flex-col h-full hover:cursor-pointer"
                 >
-                  <div className="w-full h-56 relative mb-2 rounded-md overflow-hidden">
+                  <div className="w-full relative aspect-video rounded-t-lg overflow-hidden border-b border-gray-700 bg-gray-800 flex items-center justify-center">
                     {servicio.imagenCurso && typeof servicio.imagenCurso === 'string' ? (
                       <img
                         src={servicio.imagenCurso}
                         alt={`Imagen de ${servicio.titulo}`}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gray-800 flex items-center justify-center text-gray-400">
-                        Sin imagen
-                      </div>
+                      <div className="text-gray-400">Sin imagen</div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-70"></div>
+                    <div className="absolute inset-0 bg-gray-900 opacity-0 group-hover:opacity-70 transition-opacity duration-300"></div>
                   </div>
-                  <div className="flex flex-col flex-grow">
-                    <h2 className="text-lg md:text-xl font-bold text-left text-cyan-400 line-clamp-2">
+                  <div className="flex flex-col flex-grow p-4">
+                    <h2 className="text-xl md:text-2xl font-bold text-left text-cyan-400 line-clamp-2 leading-tight">
                       {servicio.titulo}
                     </h2>
-                    <p className="text-xs text-gray-400 text-left line-clamp-3 mt-auto">
+                    <p className="text-sm text-gray-400 text-left line-clamp-3 mt-2 flex-grow">
                       {servicio.descripcion}
                     </p>
                   </div>
