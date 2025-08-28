@@ -144,17 +144,17 @@ export default function CursosPage() {
                     </div>
 
                     {/* Título */}
-                    <h2 className="text-lg md:text-xl font-bold text-center text-cyan-400 mb-2 line-clamp-2 h-[3rem]">
+                    <h2 className="text-lg md:text-xl font-bold text-center text-cyan-400 mb-2 line-clamp-2 h-[3rem] flex-grow">
                       {curso.titulo}
                     </h2>
 
                     {/* Descripción */}
-                    <p className="text-xs text-gray-400 text-center mb-2 line-clamp-3 h-[3.5rem] px-2">
+                    <p className="text-xs text-gray-400 text-center mb-2 line-clamp-3 h-[3.5rem] px-2 flex-grow">
                       {curso.descripcion}
                     </p>
 
                     {/* Precio al fondo */}
-                    <p className="mt-auto font-semibold text-base text-lime-400 text-center">
+                    <p className="mt-auto font-semibold text-base text-lime-400 text-center flex-shrink-0">
                       💲 Precio: <span className="text-gray-200">${curso.precio}</span>
                     </p>
                   </Link>
@@ -204,17 +204,17 @@ export default function CursosPage() {
                     </div>
 
                     {/* Título */}
-                    <h2 className="text-lg md:text-xl font-bold text-center text-cyan-400 mb-2 line-clamp-2 h-[3rem]">
+                    <h2 className="text-lg md:text-xl font-bold text-center text-cyan-400 mb-2 line-clamp-2 h-[3rem] flex-grow">
                       {servicio.titulo}
                     </h2>
 
                     {/* Descripción */}
-                    <p className="text-xs text-gray-400 text-center mb-2 line-clamp-3 h-[3.5rem] px-2">
+                    <p className="text-xs text-gray-400 text-center mb-2 line-clamp-3 h-[3.5rem] px-2 flex-grow">
                       {servicio.descripcion}
                     </p>
 
                     {/* Precio al fondo */}
-                    <p className="mt-auto font-semibold text-base text-lime-400 text-center">
+                    <p className="mt-auto font-semibold text-base text-lime-400 text-center flex-shrink-0">
                       💲 Precio: <span className="text-gray-200">${servicio.precio}</span>
                     </p>
                   </Link>
