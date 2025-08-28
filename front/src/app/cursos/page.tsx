@@ -44,6 +44,7 @@ export default function CursosPage() {
   const cursosFiltrados = cursos.filter((curso) => {
     switch (filtro) {
       case 'Todo':
+        // Si el filtro es 'Todo', retornamos true para incluir todos los elementos.
         return true;
       case 'Cursos':
         return curso.claseItem === 'curso';
@@ -87,6 +88,24 @@ export default function CursosPage() {
   const activeClasses = 'bg-cyan-500 text-gray-900 shadow-md transform scale-105';
   const inactiveClasses = 'bg-gray-800 text-gray-200 hover:bg-gray-700';
 
+  // Lógica para el título dinámico
+  const getTitle = () => {
+    switch (filtro) {
+      case 'Todo':
+        return 'Todos los Cursos y Servicios';
+      case 'Cursos':
+        return 'Cursos';
+      case 'Servicios':
+        return 'Servicios';
+      case 'CAT':
+        return 'Cursos de CAT';
+      case 'Dynamis':
+        return 'Cursos de Dynamis';
+      default:
+        return 'Cursos y Servicios';
+    }
+  };
+
   return (
     <div className="bg-gray-950 min-h-screen text-gray-200 py-16 px-4 md:px-8">
       <div className="flex justify-center space-x-4 mb-12 flex-wrap gap-2">
@@ -128,7 +147,7 @@ export default function CursosPage() {
           className="text-3xl sm:text-4xl font-extrabold text-left mb-8
             text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-lime-400"
         >
-          {filtro === 'Servicios' ? 'Servicios' : 'Cursos'}
+          {getTitle()}
         </h2>
         {cursosFiltrados.length === 0 ? (
           <p className="text-left text-gray-400">No hay elementos disponibles para este filtro.</p>
