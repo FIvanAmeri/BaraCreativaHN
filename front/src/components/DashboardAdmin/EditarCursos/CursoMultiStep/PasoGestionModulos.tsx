@@ -1,149 +1,83 @@
 import React, { ChangeEvent } from 'react';
-import { ContenidoItem, ContenidoTipo, EditableModuloForm } from '@/app/types/curso';
-import { labelStyle, inputStyle, buttonStyle } from './estilos';
+import { CursoForm, EditableModuloForm, ContenidoTipo } from '@/app/types/curso';
+import { labelStyle, inputStyle, moduloItemStyle, removeModuloButtonStyle, addModuloButtonStyle, buttonStyle } from './estilos';
+import ModuloContenidoEditor from './ModuloContenidoEditor';
 
-interface Props {
-  modulo: EditableModuloForm;
-  onUpdate: (updatedModulo: EditableModuloForm) => void;
+interface PasoGestionModulosProps {
+  form: CursoForm;
+  handleModuloTitleChange: (index: number, value: string) => void;
+  handleAddModulo: () => void;
+  handleRemoveModulo: (index: number) => void;
+  setForm: React.Dispatch<React.SetStateAction<CursoForm>>;
+  onPrev: () => void;
+  onSubmit: (e: React.FormEvent) => Promise<void>;
+  loading: boolean;
 }
 
-const ModuloContenidoEditor: React.FC<Props> = ({ modulo, onUpdate }) => {
-  const handleAddContenido = (tipo: ContenidoTipo) => {
-    const newContenido: ContenidoItem = {
-      tipo,
-      valor: '',
-    };
-    onUpdate({
-      ...modulo,
-      contenido: [...(modulo.contenido ?? []), newContenido],
+const PasoGestionModulos: React.FC<PasoGestionModulosProps> = ({
+  form,
+  handleModuloTitleChange,
+  handleAddModulo,
+  handleRemoveModulo,
+  setForm,
+  onPrev,
+  onSubmit,
+  loading,
+}) => {
+  const handleUpdateModulo = (index: number, updatedModulo: EditableModuloForm) => {
+    setForm(prev => {
+      const newModulos = [...prev.modulos];
+      newModulos[index] = updatedModulo;
+      return { ...prev, modulos: newModulos };
     });
-  };
-
-  const handleChange = (index: number, value: string) => {
-    const updatedContenido = [...(modulo.contenido ?? [])];
-    if (updatedContenido[index]) {
-      updatedContenido[index].valor = value;
-      onUpdate({
-        ...modulo,
-        contenido: updatedContenido,
-      });
-    }
-  };
-
-  const handleFileChange = (index: number, file: File) => {
-    const updatedContenido = [...(modulo.contenido ?? [])];
-    if (updatedContenido[index]) {
-      updatedContenido[index].file = file;
-      onUpdate({
-        ...modulo,
-        contenido: updatedContenido,
-      });
-    }
-  };
-
-  const handleRemoveContenido = (index: number) => {
-    const updatedContenido = (modulo.contenido ?? []).filter((_, i) => i !== index);
-    onUpdate({
-      ...modulo,
-      contenido: updatedContenido,
-    });
-  };
-
-  const getPlaceholder = (tipo: ContenidoTipo) => {
-    switch (tipo) {
-      case ContenidoTipo.TEXTO:
-        return 'Escribe tu texto o pega una URL de video, PDF, etc.';
-      case ContenidoTipo.VIDEO:
-        return 'Pega la URL del video de YouTube, Vimeo, etc.';
-      case ContenidoTipo.PDF:
-        return 'Pega la URL del PDF';
-      case ContenidoTipo.IMAGEN:
-        return 'Pega la URL de la imagen';
-      default:
-        return '';
-    }
-  };
-  
-  const fileButtonStyles = {
-    ...buttonStyle,
-    backgroundColor: '#b91c1c',
-    color: '#fff',
-    padding: '12px 24px',
-    borderRadius: '9999px',
-    fontWeight: 'bold',
-    transition: 'all 0.3s ease',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-    ':hover': {
-      transform: 'translateY(-2px)',
-      boxShadow: '0 6px 8px rgba(0, 0, 0, 0.15)',
-    },
-  };
-
-  const removeButtonStyles = {
-    ...buttonStyle,
-    backgroundColor: '#b91c1c',
-    color: '#fff',
-    padding: '5px 10px',
-    borderRadius: '9999px',
-    fontWeight: 'bold',
-    transition: 'all 0.3s ease',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-  };
-
-  const fileInputStyles = {
-    marginTop: '10px',
-    padding: '10px',
-    border: '1px solid #ccc',
-    borderRadius: '8px',
-    backgroundColor: '#fff',
-    color: '#000',
-    width: '100%',
   };
 
   return (
-    <div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '15px', marginBottom: '25px' }}>
-        <button type="button" onClick={() => handleAddContenido(ContenidoTipo.TEXTO)} style={fileButtonStyles}>Agregar Texto/URL</button>
-        <button type="button" onClick={() => handleAddContenido(ContenidoTipo.VIDEO)} style={fileButtonStyles}>Agregar Video</button>
-        <button type="button" onClick={() => handleAddContenido(ContenidoTipo.PDF)} style={fileButtonStyles}>Agregar PDF</button>
-        <button type="button" onClick={() => handleAddContenido(ContenidoTipo.IMAGEN)} style={fileButtonStyles}>Agregar Imagen</button>
-      </div>
-      {(modulo.contenido ?? []).map((item, index) => (
-        <div key={index} style={{ marginBottom: '15px', border: '1px solid #ccc', padding: '20px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-            <span style={{ fontWeight: 'bold', fontSize: '1.1rem', color: '#5a1a01' }}>{item.tipo.toUpperCase()}</span>
-            <button type="button" onClick={() => handleRemoveContenido(index)} style={removeButtonStyles}>Eliminar</button>
-          </div>
-          {item.tipo === ContenidoTipo.TEXTO ? (
-            <input
-              type="text"
-              value={item.valor}
-              onChange={(e) => handleChange(index, e.target.value)}
-              placeholder={getPlaceholder(item.tipo)}
-              style={inputStyle}
-            />
-          ) : (
-            <div>
-              {item.file ? (
-                <p>Archivo seleccionado: {item.file.name}</p>
-              ) : (
-                <input
-                  type="file"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      handleFileChange(index, file);
-                    }
-                  }}
-                  style={fileInputStyles}
-                />
-              )}
-            </div>
-          )}
+    <form onSubmit={onSubmit}>
+      <h3 style={{ marginBottom: 15, textAlign: 'center', color: '#5a1a01' }}>Módulos del Curso</h3>
+      {form.modulos.map((modulo, index) => (
+        <div key={modulo.id} style={moduloItemStyle}>
+          <input
+            type="text"
+            placeholder={`Título del Módulo ${index + 1}`}
+            value={modulo.titulo}
+            onChange={(e) => handleModuloTitleChange(index, e.target.value)}
+            required
+            style={inputStyle}
+          />
+          <ModuloContenidoEditor
+            modulo={modulo}
+            onUpdate={(updatedModulo) => handleUpdateModulo(index, updatedModulo)}
+          />
+          <button type="button" onClick={() => handleRemoveModulo(index)} style={removeModuloButtonStyle}>
+            Eliminar Módulo
+          </button>
         </div>
       ))}
-    </div>
+      <button type="button" onClick={handleAddModulo} style={addModuloButtonStyle}>
+        Añadir Módulo
+      </button>
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 20 }}>
+        <button type="button" onClick={onPrev} style={{ ...buttonStyle, backgroundColor: '#6b7280', width: '48%' }}>Anterior</button>
+        <button
+          type="submit"
+          disabled={loading}
+          style={{ ...buttonStyle, width: '48%' }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#f59e0b';
+            (e.currentTarget as HTMLButtonElement).style.color = '#5a1a01';
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#b91c1c';
+            (e.currentTarget as HTMLButtonElement).style.color = 'white';
+          }}
+        >
+          {loading ? 'Creando Curso...' : 'Crear Curso'}
+        </button>
+      </div>
+    </form>
   );
 };
 
-export default ModuloContenidoEditor;
+export default PasoGestionModulos;
