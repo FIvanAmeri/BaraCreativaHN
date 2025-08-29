@@ -15,30 +15,34 @@ const ModuloContenidoEditor: React.FC<Props> = ({ modulo, onUpdate }) => {
     };
     onUpdate({
       ...modulo,
-      contenido: [...modulo.contenido, newContenido],
+      contenido: [...(modulo.contenido ?? []), newContenido],
     });
   };
 
   const handleChange = (index: number, value: string) => {
-    const updatedContenido = [...modulo.contenido];
-    updatedContenido[index].valor = value;
-    onUpdate({
-      ...modulo,
-      contenido: updatedContenido,
-    });
+    const updatedContenido = [...(modulo.contenido ?? [])];
+    if (updatedContenido[index]) {
+      updatedContenido[index].valor = value;
+      onUpdate({
+        ...modulo,
+        contenido: updatedContenido,
+      });
+    }
   };
 
   const handleFileChange = (index: number, file: File) => {
-    const updatedContenido = [...modulo.contenido];
-    updatedContenido[index].file = file;
-    onUpdate({
-      ...modulo,
-      contenido: updatedContenido,
-    });
+    const updatedContenido = [...(modulo.contenido ?? [])];
+    if (updatedContenido[index]) {
+      updatedContenido[index].file = file;
+      onUpdate({
+        ...modulo,
+        contenido: updatedContenido,
+      });
+    }
   };
 
   const handleRemoveContenido = (index: number) => {
-    const updatedContenido = modulo.contenido.filter((_, i) => i !== index);
+    const updatedContenido = (modulo.contenido ?? []).filter((_, i) => i !== index);
     onUpdate({
       ...modulo,
       contenido: updatedContenido,
@@ -68,7 +72,7 @@ const ModuloContenidoEditor: React.FC<Props> = ({ modulo, onUpdate }) => {
         <button type="button" onClick={() => handleAddContenido(ContenidoTipo.PDF)} style={buttonStyle}>Agregar PDF</button>
         <button type="button" onClick={() => handleAddContenido(ContenidoTipo.IMAGEN)} style={buttonStyle}>Agregar Imagen</button>
       </div>
-      {modulo.contenido.map((item, index) => (
+      {(modulo.contenido ?? []).map((item, index) => (
         <div key={index} style={{ marginBottom: '10px', border: '1px solid #ccc', padding: '10px', borderRadius: '8px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontWeight: 'bold' }}>{item.tipo.toUpperCase()}</span>
