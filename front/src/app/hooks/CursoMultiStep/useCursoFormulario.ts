@@ -177,7 +177,8 @@ export const useCursoFormulario = (
 
       for (const moduloForm of form.modulos) {
         const formDataModuleFiles = new FormData();
-        const filesToUpload = moduloForm.contenido.filter(item => item.file instanceof File);
+        // === CORRECCIÓN APLICADA AQUÍ ===
+        const filesToUpload = (moduloForm.contenido ?? []).filter(item => item.file instanceof File);
         
         if (filesToUpload.length > 0) {
           filesToUpload.forEach((item) => {

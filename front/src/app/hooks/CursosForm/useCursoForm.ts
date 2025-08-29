@@ -45,12 +45,11 @@ export default function useCursoForm(
         claseItem: cursoInicial.claseItem,
         fechaInicio: cursoInicial.fechaInicio,
         modulos: cursoInicial.modulos.map((m) => {
-          const contenido: ContenidoItem[] = [];
-          if (m.contenido) {
-            m.contenido.forEach(item => {
-              contenido.push({ tipo: item.tipo, valor: item.valor });
-            });
-          }
+          // Corrección 1: Usa el operador de fusión nula para manejar 'undefined'
+          const contenido: ContenidoItem[] = (m.contenido ?? []).map(item => ({
+            tipo: item.tipo,
+            valor: item.valor
+          }));
           return {
             id: m.id,
             titulo: m.titulo,
@@ -154,7 +153,8 @@ export default function useCursoForm(
         modulos: datos.modulos.map((m) => ({
           titulo: m.titulo,
           descripcion: m.descripcion,
-          contenido: m.contenido.map(c => ({
+          // Corrección 2: Usa el operador de fusión nula para la llamada a map
+          contenido: (m.contenido ?? []).map(c => ({
             tipo: c.tipo,
             valor: c.valor
           }))
@@ -200,7 +200,8 @@ export default function useCursoForm(
 
       for (const moduloForm of datos.modulos) {
         const formDataModuleFiles = new FormData();
-        const filesToUpload = moduloForm.contenido.filter(item => item.file instanceof File);
+        // Corrección 3: Usa el operador de fusión nula para la llamada a filter
+        const filesToUpload = (moduloForm.contenido ?? []).filter(item => item.file instanceof File);
 
         if (filesToUpload.length > 0) {
           filesToUpload.forEach((item) => {
