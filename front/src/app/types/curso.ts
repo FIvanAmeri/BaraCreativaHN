@@ -1,3 +1,5 @@
+// src/app/types/curso.ts
+
 export enum ClaseItem {
   CURSO = 'curso',
   SERVICIO = 'servicio',
@@ -26,7 +28,12 @@ export interface Modulo {
   id: number;
   titulo: string;
   descripcion: string | null;
-  contenido: ContenidoItem[];
+  videoUrl?: string[] | null;
+  pdfUrl?: string[] | null;
+  imageUrl?: string[] | null;
+  contenido?: ContenidoItem[];
+  orden?: number | null;
+  tipo?: string | null; 
 }
 
 export interface ModuloFormBase {

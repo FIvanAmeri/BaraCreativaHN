@@ -5,9 +5,9 @@ import { ReporteProgresoEntity } from '../../entidades/ReporteProgreso.entity';
 import { Usuario } from '../../entidades/usuario.entity';
 import { Curso } from '../../entidades/curso.entity';
 import { ModuloEntity, TipoModulo } from '../../entidades/modulo.entity';
-import { Inscripcion } from '../../entidades/inscripcion.entity'; 
+import { Inscripcion } from '../../entidades/inscripcion.entity';
 import { MarcarModuloCompletadoDto } from '../../interfaces/reporte-progreso.interface';
-import { CertificadosService } from '../../services/certificados/certificados.service'; 
+import { CertificadosService } from '../../services/certificados/certificados.service';
 
 const SCORM_VIRTUAL_MODULE_ID_OFFSET = 1000000;
 
@@ -64,7 +64,6 @@ export class ReporteProgresoService {
         });
         scormModuloEnBD = await this.moduloRepository.save(nuevoScormModulo);
         this.logger.log(`[marcarSCORMCompletado] Modulo SCORM virtual (ID: ${scormVirtualModuloId}) GUARDADO exitosamente en la tabla 'modulos'.`);
-        this.logger.log(`[marcarSCORMCompletado] ID REAL del Modulo SCORM virtual DESPUÉS DE GUARDAR: ${scormModuloEnBD.id}`);
       }
     } catch (error) {
       this.logger.error(`[marcarSCORMCompletado] ERROR CRÍTICO al buscar/crear Modulo SCORM virtual (ID: ${scormVirtualModuloId}): ${error.message}`, error.stack);
@@ -95,17 +94,8 @@ export class ReporteProgresoService {
       reporteProgreso.completado = true;
       reporteProgreso.fechaCompletado = new Date();
 
-      this.logger.log(`[marcarSCORMCompletado] Antes de guardar ReporteProgreso: modulo.id en reporteProgreso es ${reporteProgreso.modulo?.id}`);
-
       const reporteGuardado = await this.reporteProgresoRepository.save(reporteProgreso);
       this.logger.log(`[marcarSCORMCompletado] ReporteProgreso para Modulo SCORM virtual (ID: ${scormVirtualModuloId}) GUARDADO exitosamente en la tabla 'reportes_progreso'.`);
-      
-      const reporteVerificado = await this.reporteProgresoRepository.findOne({
-        where: { id: reporteGuardado.id }, 
-        relations: ['modulo']
-      });
-      this.logger.log(`[marcarSCORMCompletado] VERIFICACIÓN INMEDIATA (ReporteProgreso SCORM): ID:${reporteGuardado.id} Encontrado en DB: ${reporteVerificado ? 'SÍ' : 'NO'}. Módulo asociado: ${reporteVerificado?.modulo?.id}`);
-
 
       await this.verificarYMarcarCursoCompleto(usuarioId, cursoId, scormModuloEnBD);
 
@@ -138,7 +128,7 @@ export class ReporteProgresoService {
     }
 
     if (moduloId >= SCORM_VIRTUAL_MODULE_ID_OFFSET) {
-        throw new BadRequestException('Intento de marcar un módulo virtual SCORM con el método incorrecto. Por favor, asegúrese de que el ID del módulo sea válido para un módulo no SCORM.');
+      throw new BadRequestException('Intento de marcar un módulo virtual SCORM con el método incorrecto.');
     }
 
     const modulo = await this.moduloRepository.findOne({ where: { id: moduloId, curso: { id: cursoId } } });
@@ -170,13 +160,6 @@ export class ReporteProgresoService {
 
     const reporteGuardado = await this.reporteProgresoRepository.save(reporteProgreso);
     this.logger.log(`[marcarModuloCompletado] Módulo ${moduloId} del curso ${cursoId} marcado como completado para usuario ${usuarioId}.`);
-
-    const reporteVerificado = await this.reporteProgresoRepository.findOne({
-      where: { id: reporteGuardado.id }, 
-      relations: ['modulo']
-    });
-    this.logger.log(`[marcarModuloCompletado] VERIFICACIÓN INMEDIATA (ReporteProgreso Regular): ID:${reporteGuardado.id} Encontrado en DB: ${reporteVerificado ? 'SÍ' : 'NO'}. Módulo asociado: ${reporteVerificado?.modulo?.id}`);
-
 
     await this.verificarYMarcarCursoCompleto(usuarioId, cursoId, modulo);
 
@@ -211,34 +194,36 @@ export class ReporteProgresoService {
 
     let modulosDelCursoParaComprobacion: ModuloEntity[] = [];
 
+    // Lógica para manejar el módulo SCORM virtual
     if (curso.archivoScorm) {
-        const scormVirtualModuloId = cursoId + SCORM_VIRTUAL_MODULE_ID_OFFSET;
-        const scormModuloReal = await this.moduloRepository.findOne({ where: { id: scormVirtualModuloId } });
+      const scormVirtualModuloId = cursoId + SCORM_VIRTUAL_MODULE_ID_OFFSET;
+      const scormModuloReal = await this.moduloRepository.findOne({ where: { id: scormVirtualModuloId } });
 
-        if (scormModuloReal) {
-            modulosDelCursoParaComprobacion.push(scormModuloReal);
-            this.logger.log(`[verificarYMarcarCursoCompleto] Agregado módulo SCORM virtual (ID: ${scormVirtualModuloId}) REAL de la BD a la lista de comprobación.`);
-        } else {
-            const scormModuloProxy = new ModuloEntity();
-            scormModuloProxy.id = scormVirtualModuloId;
-            scormModuloProxy.titulo = curso.titulo + ' (Módulo SCORM Principal)';
-            scormModuloProxy.tipo = TipoModulo.SCORM;
-            scormModuloProxy.orden = 0; 
-            modulosDelCursoParaComprobacion.push(scormModuloProxy);
-            this.logger.log(`[verificarYMarcarCursoCompleto] Agregado módulo SCORM virtual (ID: ${scormVirtualModuloId}) como PROXY a la lista de comprobación (no encontrado en BD).`);
-        }
+      if (scormModuloReal) {
+        modulosDelCursoParaComprobacion.push(scormModuloReal);
+        this.logger.log(`[verificarYMarcarCursoCompleto] Agregado módulo SCORM virtual (ID: ${scormVirtualModuloId}) REAL de la BD a la lista de comprobación.`);
+      } else {
+        const scormModuloProxy = new ModuloEntity();
+        scormModuloProxy.id = scormVirtualModuloId;
+        scormModuloProxy.titulo = curso.titulo + ' (Módulo SCORM Principal)';
+        scormModuloProxy.tipo = TipoModulo.SCORM;
+        scormModuloProxy.orden = 0;
+        modulosDelCursoParaComprobacion.push(scormModuloProxy);
+        this.logger.log(`[verificarYMarcarCursoCompleto] Agregado módulo SCORM virtual (ID: ${scormVirtualModuloId}) como PROXY a la lista de comprobación (no encontrado en BD).`);
+      }
     }
-    
-    modulosDelCursoParaComprobacion = [
-        ...modulosDelCursoParaComprobacion,
-        ...curso.modulos.filter(m => m.tipo !== TipoModulo.SCORM)
-    ];
-    
-    this.logger.log(`[verificarYMarcarCursoCompletado] Módulos esperados FINALES para el curso ${cursoId}: ${modulosDelCursoParaComprobacion.map(m => `ID:${m.id} Tipo:${m.tipo}`).join(', ')}`);
 
+    // Filtra los módulos regulares para no incluir otros SCORM
+    const modulosRegulares = curso.modulos.filter(m => m.tipo !== TipoModulo.SCORM);
+    modulosDelCursoParaComprobacion = [
+      ...modulosDelCursoParaComprobacion,
+      ...modulosRegulares
+    ];
+
+    this.logger.log(`[verificarYMarcarCursoCompleto] Módulos esperados FINALES para el curso ${cursoId}: ${modulosDelCursoParaComprobacion.map(m => `ID:${m.id} Tipo:${m.tipo}`).join(', ')}`);
 
     if (modulosDelCursoParaComprobacion.length === 0) {
-      this.logger.log(`[verificarYMarcarCursoCompletado] Curso ${cursoId} no tiene módulos para verificar el progreso, no se puede marcar como completo.`);
+      this.logger.log(`[verificarYMarcarCursoCompleto] Curso ${cursoId} no tiene módulos para verificar el progreso, no se puede marcar como completo.`);
       return;
     }
 
@@ -249,16 +234,15 @@ export class ReporteProgresoService {
     });
 
     const modulosCompletadosIds = new Set(progresoUsuario.map(rp => rp.modulo.id));
-    this.logger.log(`[verificarYMarcarCursoCompletado] Módulos completados registrados para usuario ${usuarioId} en curso ${cursoId}: [${Array.from(modulosCompletadosIds).join(', ')}]`);
+    this.logger.log(`[verificarYMarcarCursoCompleto] Módulos completados registrados para usuario ${usuarioId} en curso ${cursoId}: [${Array.from(modulosCompletadosIds).join(', ')}]`);
 
     const todosLosModulosCompletados = modulosDelCursoParaComprobacion.every(modulo =>
       modulosCompletadosIds.has(modulo.id)
     );
-    this.logger.log(`[verificarYMarcarCursoCompletado] Resultado de la comprobación 'todosLosModulosCompletados': ${todosLosModulosCompletados}`);
-
+    this.logger.log(`[verificarYMarcarCursoCompleto] Resultado de la comprobación 'todosLosModulosCompletados': ${todosLosModulosCompletados}`);
 
     if (todosLosModulosCompletados) {
-      this.logger.log(`[verificarYMarcarCursoCompletado] Todos los módulos del curso ${cursoId} completados por usuario ${usuarioId}. Marcando curso como completado.`);
+      this.logger.log(`[verificarYMarcarCursoCompleto] Todos los módulos del curso ${cursoId} completados por usuario ${usuarioId}. Marcando curso como completado.`);
 
       const inscripcion = await this.inscripcionRepository.findOne({
         where: { usuario: { id: usuarioId }, curso: { id: cursoId } },

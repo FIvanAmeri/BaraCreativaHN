@@ -6,6 +6,7 @@ import {
   BaseEntity,
   ManyToOne,
 } from 'typeorm';
+import { ModuloEntity } from './modulo.entity'; // <-- Importación correcta de ModuloEntity
 import { BadgeEntity } from './badge.entity';
 import { Carrito } from './carrito.entity';
 import { Certificado } from './certificado.entity';
@@ -32,41 +33,7 @@ export enum ModalidadCurso {
   MIXTO = 'mixto',
 }
 
-export enum ContenidoTipo {
-  TEXTO = 'texto',
-  VIDEO = 'video',
-  PDF = 'pdf',
-  IMAGEN = 'imagen',
-}
-
-export interface ContenidoItem {
-  tipo: ContenidoTipo;
-  valor: string;
-}
-
-@Entity('modulos')
-export class ModuloEntity extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column()
-  titulo: string;
-
-  @Column({ nullable: true })
-  descripcion: string;
-
-  @Column({ type: 'jsonb', nullable: true })
-  contenido: ContenidoItem[];
-
-  @Column({ type: 'int', nullable: true })
-  orden: number;
-
-  @ManyToOne(() => Curso, (curso) => curso.modulos)
-  curso: Curso;
-
-  @OneToMany(() => ReporteProgresoEntity, (progreso) => progreso.modulo)
-  reportesProgreso: ReporteProgresoEntity[];
-}
+// **Se eliminó la definición de ModuloEntity y sus enums asociados de este archivo.**
 
 @Entity('cursos')
 export class Curso extends BaseEntity {

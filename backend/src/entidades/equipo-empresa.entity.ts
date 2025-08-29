@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne, Column } from 'typeorm';
 import { Usuario } from './usuario.entity';
 import { Curso } from './curso.entity'; 
+
 export enum TipoMiembro {
   Admin = 'admin',
   Miembro = 'miembro',
@@ -15,7 +16,7 @@ export class EquipoEmpresaMiembro {
   miembro: Usuario;
 
 
-  @ManyToOne(() => Curso, (curso) => curso.equiposAsignados, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Curso, (curso) => curso.equiposEmpresa, { onDelete: 'CASCADE' })
   curso: Curso; 
 
   @Column({
