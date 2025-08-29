@@ -1,4 +1,3 @@
-// components/EditarCursoAdmin.tsx
 import React from "react";
 import { useEditarCursoForm } from "@/app/hooks/EditarCursoAdmin/useEditarCursoForm";
 import { InputField } from "@/subcomponent/EditarCursoAdmin/InputField";

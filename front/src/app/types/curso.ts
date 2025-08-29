@@ -1,5 +1,3 @@
-// src/app/types/curso.ts
-
 export enum ClaseItem {
   CURSO = 'curso',
   SERVICIO = 'servicio',
@@ -33,7 +31,7 @@ export interface Modulo {
   imageUrl?: string[] | null;
   contenido?: ContenidoItem[];
   orden?: number | null;
-  tipo?: string | null; 
+  tipo?: string | null;
 }
 
 export interface ModuloFormBase {
@@ -41,9 +39,13 @@ export interface ModuloFormBase {
   descripcion: string | null;
 }
 
+// Interfaz corregida para incluir las propiedades de archivos
 export interface EditableModuloForm extends ModuloFormBase {
   id?: number;
-  contenido: ContenidoItem[];
+  contenido?: ContenidoItem[];
+  videoUrl?: string[] | null;
+  pdfUrl?: string[] | null;
+  imageUrl?: string[] | null;
 }
 
 export interface Curso {
