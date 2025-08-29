@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
-import { CursoForm, Curso, ClaseItem } from '@/app/types/curso';
+import { CursoForm, Curso, ClaseItem, Modulo } from '@/app/types/curso';
 
 interface Props {
   curso: Curso;
@@ -21,7 +21,11 @@ export const useEditarCursoForm = ({ curso, onGuardar }: Props) => {
     archivoScorm: curso.archivoScorm || null,
     newScormFile: null,
     claseItem: curso.claseItem || ClaseItem.CURSO,
-    modulos: curso.modulos || [],
+    // === CORRECCIÓN APLICADA AQUÍ ===
+    modulos: (curso.modulos || []).map((mod: Modulo) => ({
+      ...mod,
+      contenido: mod.contenido || [], // Garantiza que 'contenido' siempre es un array
+    })),
   });
 
   const [error, setError] = useState('');
