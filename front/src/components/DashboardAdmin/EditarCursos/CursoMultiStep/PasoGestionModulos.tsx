@@ -1,13 +1,14 @@
 import React, { ChangeEvent } from 'react';
 import { CursoForm, EditableModuloForm } from '@/app/types/curso';
 import { labelStyle, inputStyle, moduloItemStyle, removeModuloButtonStyle, addModuloButtonStyle, buttonStyle } from './estilos';
+import ModuloContenidoEditor from './ModuloContenidoEditor';
 
 interface PasoGestionModulosProps {
   form: CursoForm;
   handleModuloTitleChange: (index: number, value: string) => void;
   handleAddModulo: () => void;
   handleRemoveModulo: (index: number) => void;
-  setForm: React.Dispatch<React.SetStateAction<CursoForm>>; 
+  setForm: React.Dispatch<React.SetStateAction<CursoForm>>;
   onPrev: () => void;
   onSubmit: (e: React.FormEvent) => Promise<void>;
   loading: boolean;
@@ -23,8 +24,16 @@ const PasoGestionModulos: React.FC<PasoGestionModulosProps> = ({
   onSubmit,
   loading,
 }) => {
+  const handleUpdateModulo = (index: number, updatedModulo: EditableModuloForm) => {
+    setForm(prev => {
+      const newModulos = [...prev.modulos];
+      newModulos[index] = updatedModulo;
+      return { ...prev, modulos: newModulos };
+    });
+  };
+
   return (
-    <>
+    <form onSubmit={onSubmit}>
       <h3 style={{ marginBottom: 15, textAlign: 'center', color: '#5a1a01' }}>Módulos del Curso</h3>
       {form.modulos.map((modulo, index) => (
         <div key={modulo.id} style={moduloItemStyle}>
@@ -36,66 +45,10 @@ const PasoGestionModulos: React.FC<PasoGestionModulosProps> = ({
             required
             style={inputStyle}
           />
-          <label style={labelStyle}>Video(s) del Módulo (opcional)</label>
-          <input
-            type="file"
-            multiple 
-            accept="video/*"
-            onChange={(e: ChangeEvent<HTMLInputElement>) => {
-              const files = e.target.files;
-              setForm(prev => {
-                const newModulos: EditableModuloForm[] = [...prev.modulos];
-                const currentFiles = newModulos[index].videoFile || [];
-                newModulos[index] = { 
-                  ...newModulos[index], 
-                  videoFile: files ? [...currentFiles, ...Array.from(files)] : currentFiles 
-                };
-                return { ...prev, modulos: newModulos };
-              });
-            }}
-            style={{ marginBottom: 10 }}
+          <ModuloContenidoEditor
+            modulo={modulo}
+            onUpdate={(updatedModulo) => handleUpdateModulo(index, updatedModulo)}
           />
-
-          <label style={labelStyle}>PDF(s) del Módulo (opcional)</label>
-          <input
-            type="file"
-            multiple 
-            accept="application/pdf"
-            onChange={(e: ChangeEvent<HTMLInputElement>) => {
-              const files = e.target.files;
-              setForm(prev => {
-                const newModulos: EditableModuloForm[] = [...prev.modulos];
-                const currentFiles = newModulos[index].pdfFile || [];
-                newModulos[index] = { 
-                  ...newModulos[index], 
-                  pdfFile: files ? [...currentFiles, ...Array.from(files)] : currentFiles 
-                };
-                return { ...prev, modulos: newModulos };
-              });
-            }}
-            style={{ marginBottom: 10 }}
-          />
-
-          <label style={labelStyle}>Imagen(es) del Módulo (opcional)</label>
-          <input
-            type="file"
-            multiple 
-            accept="image/*"
-            onChange={(e: ChangeEvent<HTMLInputElement>) => {
-              const files = e.target.files;
-              setForm(prev => {
-                const newModulos: EditableModuloForm[] = [...prev.modulos];
-                const currentFiles = newModulos[index].imageFile || [];
-                newModulos[index] = { 
-                  ...newModulos[index], 
-                  imageFile: files ? [...currentFiles, ...Array.from(files)] : currentFiles 
-                };
-                return { ...prev, modulos: newModulos };
-              });
-            }}
-            style={{ marginBottom: 20 }}
-          />
-
           <button type="button" onClick={() => handleRemoveModulo(index)} style={removeModuloButtonStyle}>
             Eliminar Módulo
           </button>
@@ -123,7 +76,7 @@ const PasoGestionModulos: React.FC<PasoGestionModulosProps> = ({
           {loading ? 'Creando Curso...' : 'Crear Curso'}
         </button>
       </div>
-    </>
+    </form>
   );
 };
 

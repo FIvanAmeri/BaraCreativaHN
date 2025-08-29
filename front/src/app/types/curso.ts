@@ -1,4 +1,3 @@
-
 export enum ClaseItem {
   CURSO = 'curso',
   SERVICIO = 'servicio',
@@ -10,28 +9,34 @@ export enum TipoCurso {
   EMPRESAS = 'Empresas',
 }
 
+export enum ContenidoTipo {
+  TEXTO = 'texto',
+  VIDEO = 'video',
+  PDF = 'pdf',
+  IMAGEN = 'imagen',
+}
+
+export interface ContenidoItem {
+  tipo: ContenidoTipo;
+  valor: string; // Para texto o URL
+  file?: File; // Para archivos subidos
+}
+
 export interface Modulo {
   id: number;
   titulo: string;
   descripcion: string | null;
-  videoUrl: string[] | null;
-  pdfUrl: string[] | null;
-  imageUrl: string[] | null;
+  contenido: ContenidoItem[];
 }
 
 export interface ModuloFormBase {
   titulo: string;
   descripcion: string | null;
-  videoUrl?: string[] | null;
-  pdfUrl?: string[] | null;
-  imageUrl?: string[] | null;
 }
 
 export interface EditableModuloForm extends ModuloFormBase {
   id?: number;
-  videoFile?: File[] | null;
-  pdfFile?: File[] | null;
-  imageFile?: File[] | null;
+  contenido: ContenidoItem[];
 }
 
 export interface Curso {
@@ -114,4 +119,9 @@ export interface ApiCurso {
   claseItem: ClaseItem;
   fechaInicio: Date | null;
   modulos: ModuloResumen[];
+}
+
+export interface MarcarModuloCompletadoDto {
+  cursoId: number;
+  moduloId: number;
 }

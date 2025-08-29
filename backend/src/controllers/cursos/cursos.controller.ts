@@ -192,9 +192,12 @@ export class CursosController {
     @Param('id', ParseIntPipe) moduloId: number,
     @UploadedFiles() files: Array<Express.Multer.File>,
   ) {
+    // Verificar si se subieron archivos
     if (!files || files.length === 0) {
       throw new BadRequestException('No se subieron archivos para el módulo.');
     }
+
+    // Inicializar los arrays de URLs de archivos
     const updatedPaths: {
       videoUrls: string[];
       pdfUrls: string[];
@@ -204,6 +207,8 @@ export class CursosController {
       pdfUrls: [],
       imageUrls: [],
     };
+
+    // Iterar sobre los archivos subidos y asignar la ruta local al array correspondiente
     files.forEach(file => {
       const filePath = `/uploads/modulos/${file.filename}`;
       if (file.mimetype.startsWith('video/')) {
@@ -214,7 +219,9 @@ export class CursosController {
         updatedPaths.imageUrls.push(filePath);
       }
     });
+
     try {
+      // Llamar al servicio para actualizar las rutas en la base de datos
       const updatedModulo = await this.cursosService.actualizarModuloFilePaths(moduloId, updatedPaths);
       return {
         message: 'Archivos de módulo subidos y rutas actualizadas correctamente',

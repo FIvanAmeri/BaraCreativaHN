@@ -173,11 +173,11 @@ export class CursosService {
       }
 
       if (error instanceof BadRequestException || error instanceof InternalServerErrorException || error instanceof NotFoundException) {
-          throw error;
+        throw error;
       } else if (error instanceof Error) {
-          throw new InternalServerErrorException(`Error inesperado al procesar SCORM: ${error.message}`);
+        throw new InternalServerErrorException(`Error inesperado al procesar SCORM: ${error.message}`);
       } else {
-          throw new InternalServerErrorException('Error inesperado y desconocido al procesar SCORM.');
+        throw new InternalServerErrorException('Error inesperado y desconocido al procesar SCORM.');
       }
     }
   }
@@ -224,6 +224,19 @@ export class CursosService {
     return savedModulo;
   }
 
+  async actualizarModuloTexto(moduloId: number, texto: string): Promise<ModuloEntity> {
+    const modulo = await this.modulosRepository.findOneBy({ id: moduloId });
+    if (!modulo) {
+      throw new NotFoundException(`Módulo con ID ${moduloId} no encontrado`);
+    }
+
+    modulo.descripcion = texto;
+    modulo.tipo = TipoModulo.TEXTO;
+
+    const savedModulo = await this.modulosRepository.save(modulo);
+    return savedModulo;
+  }
+
   async obtenerCursosDeUsuario(userId: number): Promise<Curso[]> {
     const inscripciones = await this.inscripcionesRepository
       .createQueryBuilder("inscripcion")
@@ -232,7 +245,7 @@ export class CursosService {
       .getMany();
 
     if (!inscripciones || inscripciones.length === 0) {
-        return [];
+      return [];
     }
 
     return inscripciones.map(inscripcion => inscripcion.curso);

@@ -3,8 +3,9 @@ import {
   PrimaryGeneratedColumn,
   Column,
   OneToMany,
+  BaseEntity,
+  ManyToOne,
 } from 'typeorm';
-import { ModuloEntity } from './modulo.entity';
 import { BadgeEntity } from './badge.entity';
 import { Carrito } from './carrito.entity';
 import { Certificado } from './certificado.entity';
@@ -14,14 +15,61 @@ import { Pago } from './pago.entity';
 import { ReporteProgresoEntity } from './ReporteProgreso.entity';
 import { Resena } from './resena.entity';
 
-
 export enum ClaseItem {
   CURSO = 'curso',
   SERVICIO = 'servicio',
 }
 
+export enum TipoCurso {
+  DOCENTES = 'Docentes',
+  ESTUDIANTES = 'Estudiantes',
+  EMPRESAS = 'Empresas',
+}
+
+export enum ModalidadCurso {
+  EN_VIVO = 'en vivo',
+  GRABADO = 'grabado',
+  MIXTO = 'mixto',
+}
+
+export enum ContenidoTipo {
+  TEXTO = 'texto',
+  VIDEO = 'video',
+  PDF = 'pdf',
+  IMAGEN = 'imagen',
+}
+
+export interface ContenidoItem {
+  tipo: ContenidoTipo;
+  valor: string;
+}
+
+@Entity('modulos')
+export class ModuloEntity extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  titulo: string;
+
+  @Column({ nullable: true })
+  descripcion: string;
+
+  @Column({ type: 'jsonb', nullable: true })
+  contenido: ContenidoItem[];
+
+  @Column({ type: 'int', nullable: true })
+  orden: number;
+
+  @ManyToOne(() => Curso, (curso) => curso.modulos)
+  curso: Curso;
+
+  @OneToMany(() => ReporteProgresoEntity, (progreso) => progreso.modulo)
+  reportesProgreso: ReporteProgresoEntity[];
+}
+
 @Entity('cursos')
-export class Curso {
+export class Curso extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -34,11 +82,14 @@ export class Curso {
   @Column({ type: 'enum', enum: ClaseItem, default: ClaseItem.CURSO })
   claseItem: ClaseItem;
 
-  @Column({ default: 'Docentes' })
-  tipo: 'Docentes' | 'Empresas';
+  @Column({ type: 'enum', enum: TipoCurso, default: TipoCurso.DOCENTES })
+  tipo: TipoCurso;
 
   @Column({ default: 'General' })
   categoria: string;
+
+  @Column({ nullable: true })
+  subcategoria?: string;
 
   @Column({ type: 'int', default: 0 })
   duracionHoras: number;
@@ -46,8 +97,8 @@ export class Curso {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0.0 })
   precio: number;
 
-  @Column({ default: 'grabado' })
-  modalidad: 'en vivo' | 'grabado' | 'mixto';
+  @Column({ type: 'enum', enum: ModalidadCurso, default: ModalidadCurso.GRABADO })
+  modalidad: ModalidadCurso;
 
   @Column({ default: false })
   certificadoDisponible: boolean;
@@ -60,12 +111,6 @@ export class Curso {
 
   @Column({ nullable: true })
   archivoScorm?: string;
-
-  @Column({ nullable: true })
-  videoCurso?: string;
-
-  @Column({ nullable: true })
-  pdfCurso?: string;
 
   @Column({ type: 'date', nullable: true })
   fechaInicio?: Date;
@@ -82,9 +127,8 @@ export class Curso {
   @OneToMany(() => Certificado, (certificado) => certificado.curso)
   certificados: Certificado[];
 
-
   @OneToMany(() => EquipoEmpresaMiembro, (equipo) => equipo.curso)
-  equiposAsignados: EquipoEmpresaMiembro[];
+  equiposEmpresa: EquipoEmpresaMiembro[];
 
   @OneToMany(() => Inscripcion, (inscripcion) => inscripcion.curso)
   inscripciones: Inscripcion[];
