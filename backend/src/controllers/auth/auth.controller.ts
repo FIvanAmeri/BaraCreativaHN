@@ -1,4 +1,3 @@
-// src/controllers/auth/auth.controller.ts
 import {
   Controller,
   Post,
@@ -22,7 +21,7 @@ import { SolicitarResetDto } from '../../dto/password/solicitar-reset.dto';
 import { ResetPasswordDto } from '../../dto/password/reset-password.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CreateUsuarioDto } from '../../dto/crear-editar-usuarios/create-usuario.dto';
-import { SesionService } from '../../services/sesion/sesion.service'; // Asegúrate de importar SesionService
+import { SesionService } from '../../services/sesion/sesion.service';
 
 interface UserRequest extends Request {
   user: Usuario;
@@ -34,7 +33,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly usuariosService: UsuariosService,
     private readonly socketGateway: SocketGateway,
-    private readonly sesionService: SesionService, // <--- Agregamos SesionService
+    private readonly sesionService: SesionService,
   ) {}
 
   @Post('registro')
@@ -58,13 +57,12 @@ export class AuthController {
       sameSite: 'none',
       maxAge: 3600000,
     });
-    // Lógica para iniciar sesión
     const sesion = await this.sesionService.crearSesion(user.id);
     res.cookie('sesionId', sesion.id.toString(), {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'none',
-        maxAge: 3600000,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'none',
+      maxAge: 3600000,
     });
     return { message: 'Login exitoso' };
   }
@@ -85,7 +83,6 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(@Req() req: UserRequest, @Res({ passthrough: true }) res: Response) {
-    // Lógica para finalizar sesión
     const sesionId = parseInt(req.cookies.sesionId, 10);
     if (sesionId) {
       await this.sesionService.finalizarSesion(sesionId);
@@ -100,10 +97,10 @@ export class AuthController {
       sameSite: 'none',
     });
     res.clearCookie('sesionId', {
-        path: '/',
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'none',
+      path: '/',
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'none',
     });
     const usuarios = await this.usuariosService.findAll();
     this.socketGateway.server.emit('usuariosActualizados', usuarios);
@@ -117,6 +114,19 @@ export class AuthController {
       throw new UnauthorizedException('Acceso no autorizado. Solo para administradores.');
     }
     return this.usuariosService.findAll();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('admin/users-with-session-info')
+  async getAllUsersWithSessionInfo(
+    @Req() req: UserRequest,
+    @Query('nombre') nombre?: string,
+    @Query('correoElectronico') correoElectronico?: string,
+  ) {
+    if (!req.user.esAdmin) {
+      throw new UnauthorizedException('Acceso no autorizado. Solo para administradores.');
+    }
+    return this.usuariosService.obtenerUsuariosConDatosSesion(nombre, correoElectronico);
   }
 
   @Post('request-password-reset')

@@ -1,3 +1,4 @@
+// src/services/sesion/sesion.service.ts
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -35,5 +36,23 @@ export class SesionService {
     const sesiones = await this.sesionRepository.find({ where: { usuarioId } });
     const duracionTotal = sesiones.reduce((total, sesion) => total + sesion.duracionSegundos, 0);
     return duracionTotal;
+  }
+  
+  async obtenerSesionesFiltradas(filtros: { nombre?: string; correo?: string }): Promise<Sesion[]> {
+    const query = this.sesionRepository
+      .createQueryBuilder('sesion')
+      .leftJoinAndSelect('sesion.usuario', 'usuario');
+
+    if (filtros.nombre) {
+      query.andWhere('LOWER(usuario.nombreCompleto) LIKE LOWER(:nombre)', { nombre: `%${filtros.nombre}%` });
+    }
+
+    if (filtros.correo) {
+      query.andWhere('LOWER(usuario.correoElectronico) LIKE LOWER(:correo)', { correo: `%${filtros.correo}%` });
+    }
+
+    query.orderBy('sesion.fechaInicio', 'DESC');
+
+    return query.getMany();
   }
 }

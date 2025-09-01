@@ -7,6 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like, FindOptionsWhere } from 'typeorm';
 import { Usuario, TipoUsuario } from '../../entidades/usuario.entity';
+import { Sesion } from '../../entidades/sesion.entity';
 import * as bcrypt from 'bcrypt';
 import { SocketGateway } from '../../socket/socket.gateway';
 
@@ -121,5 +122,44 @@ export class UsuariosService {
   async notificarActualizacionEstado(): Promise<void> {
     const usuarios = await this.findAll();
     this.socketGateway.server.emit('usuariosActualizados', usuarios);
+  }
+
+  async obtenerUsuariosConDatosSesion(
+    nombreFiltro?: string,
+    correoFiltro?: string,
+  ): Promise<(Usuario & { duracionUltimaSesion?: number; duracionTotalConectado?: number })[]> {
+    let query = this.usuariosRepository
+      .createQueryBuilder('usuario')
+      .leftJoinAndSelect('usuario.sesiones', 'sesion');
+
+    if (nombreFiltro) {
+      query = query.andWhere('LOWER(usuario.nombreCompleto) LIKE LOWER(:nombre)', {
+        nombre: `%${nombreFiltro}%`,
+      });
+    }
+
+    if (correoFiltro) {
+      query = query.andWhere('LOWER(usuario.correoElectronico) LIKE LOWER(:correo)', {
+        correo: `%${correoFiltro}%`,
+      });
+    }
+
+    const usuarios = await query.getMany();
+
+    return usuarios.map((usuario) => {
+      const sesionesFinalizadas = usuario.sesiones.filter((s) => s.fechaFin);
+      const ultimaSesion = sesionesFinalizadas.sort(
+        (a, b) => b.fechaInicio.getTime() - a.fechaInicio.getTime(),
+      )[0];
+      const duracionTotalConectado = usuario.sesiones.reduce(
+        (total, sesion) => total + (sesion.duracionSegundos || 0),
+        0,
+      );
+      return {
+        ...usuario,
+        duracionUltimaSesion: ultimaSesion ? ultimaSesion.duracionSegundos : undefined,
+        duracionTotalConectado,
+      };
+    });
   }
 }

@@ -1,9 +1,9 @@
+// src/components/DashboardAdmin/VistaSesiones/VistaInfoSesion.tsx
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import TablaInfoSesion from './TablaInfoSesion';
 import FiltrosInfoSesion from './FiltrosInfoSesion';
-
 
 const debounce = <T extends (...args: unknown[]) => void>(
   func: T,
@@ -40,38 +40,24 @@ const VistaInfoSesion: React.FC = () => {
   const [correoFiltro, setCorreoFiltro] = useState('');
   const [cargando, setCargando] = useState(true);
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
   const obtenerUsuarios = useCallback(async () => {
     setCargando(true);
     try {
-      const url = new URL(`${API_URL}/api/usuarios`);
-      if (nombreFiltro) url.searchParams.append("nombre", nombreFiltro);
-      if (correoFiltro) url.searchParams.append("correoElectronico", correoFiltro);
-      
-      const res = await fetch(url.toString(), { credentials: "include" });
-      const usuariosData: Usuario[] = await res.json();
-      
-      const usuariosConDatosSesion = await Promise.all(
-        usuariosData.map(async (user) => {
-          const [ultimaSesionRes, duracionTotalRes] = await Promise.all([
-            fetch(`${API_URL}/api/sesion/ultima?usuarioId=${user.id}`, { credentials: "include" }),
-            fetch(`${API_URL}/api/sesion/duracion-total?usuarioId=${user.id}`, { credentials: "include" })
-          ]);
-          
-          const ultimaSesionData = ultimaSesionRes.ok ? await ultimaSesionRes.json() : {};
-          const duracionTotalData = duracionTotalRes.ok ? await duracionTotalRes.json() : {};
+      const url = new URL(`${API_URL}/api/auth/admin/users-with-session-info`);
+      if (nombreFiltro) url.searchParams.append('nombre', nombreFiltro);
+      if (correoFiltro) url.searchParams.append('correoElectronico', correoFiltro);
 
-          return {
-            ...user,
-            duracionUltimaSesion: ultimaSesionData.duracionSegundos,
-            duracionTotalConectado: duracionTotalData.duracion,
-          };
-        })
-      );
-      setUsuarios(usuariosConDatosSesion);
+      const res = await fetch(url.toString(), { credentials: 'include' });
+      if (!res.ok) {
+        throw new Error('Error al obtener usuarios');
+      }
+
+      const usuariosData: UserWithSessionData[] = await res.json();
+      setUsuarios(usuariosData);
     } catch (error) {
-      console.error("Error al obtener usuarios:", error);
+      console.error('Error al obtener usuarios:', error);
     } finally {
       setCargando(false);
     }

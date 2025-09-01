@@ -3,7 +3,7 @@ import MenuAdmin from './MenuAdmin';
 import VistaCursos from './VistaCursos';
 import VistaUsuarios from '@/components/DashboardAdmin/VistaUsuarios/VistaUsuarios';
 import AgregarUsuario from '@/components/DashboardAdmin/AgregarUsuario/AgregarUsuario';
-import VistaInfoSesion from './VistaInfoSesion';
+import VistaInfoSesion from '@/components/DashboardAdmin/VistaInfoSesion';
 
 export default function DashboardAdmin() {
   const [vistaSeleccionada, setVistaSeleccionada] = useState<'usuarios' | 'cursos' | 'agregarUsuario' | 'infoSesion'>('usuarios');
@@ -14,9 +14,7 @@ export default function DashboardAdmin() {
       <main className="flex-1 p-6">
         {vistaSeleccionada === 'usuarios' && <VistaUsuarios />}
         {vistaSeleccionada === 'cursos' && <VistaCursos />}
-        {vistaSeleccionada === 'agregarUsuario' && (
-          <AgregarUsuario onUsuarioCreado={() => {}} />
-        )}
+        {vistaSeleccionada === 'agregarUsuario' && <AgregarUsuario onUsuarioCreado={() => {}} />}
         {vistaSeleccionada === 'infoSesion' && <VistaInfoSesion />}
       </main>
     </div>
