@@ -5,17 +5,20 @@ import {
   forwardRef,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like, FindOptionsWhere } from 'typeorm';
+import { Repository, Like, FindOptionsWhere, LessThanOrEqual, IsNull } from 'typeorm';
 import { Usuario, TipoUsuario } from '../../entidades/usuario.entity';
 import { Sesion } from '../../entidades/sesion.entity';
 import * as bcrypt from 'bcrypt';
 import { SocketGateway } from '../../socket/socket.gateway';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class UsuariosService {
   constructor(
     @InjectRepository(Usuario)
     private usuariosRepository: Repository<Usuario>,
+    @InjectRepository(Sesion)
+    private sesionesRepository: Repository<Sesion>,
     @Inject(forwardRef(() => SocketGateway))
     private readonly socketGateway: SocketGateway,
   ) {}
@@ -161,5 +164,42 @@ export class UsuariosService {
         duracionTotalConectado,
       };
     });
+  }
+
+  @Cron('0 */5 * * * *')
+  async cerrarSesionesInactivas(): Promise<void> {
+    const unaHoraAtras = new Date();
+    unaHoraAtras.setHours(unaHoraAtras.getHours() - 1);
+
+    const sesionesInactivas = await this.sesionesRepository.find({
+      where: {
+        fechaFin: IsNull(),
+        fechaInicio: LessThanOrEqual(unaHoraAtras),
+      },
+      relations: ['usuario'],
+    });
+
+    if (sesionesInactivas.length > 0) {
+      
+    }
+
+    for (const sesion of sesionesInactivas) {
+      const ahora = new Date();
+      const duracion = (ahora.getTime() - sesion.fechaInicio.getTime()) / 1000;
+
+      await this.sesionesRepository.update(sesion.id, {
+        fechaFin: ahora,
+        duracionSegundos: duracion,
+      });
+
+      await this.usuariosRepository.update(sesion.usuario.id, {
+        estaConectado: false,
+        ultimaSesion: ahora,
+      });
+
+      
+    }
+
+    await this.notificarActualizacionEstado();
   }
 }

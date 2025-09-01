@@ -17,7 +17,7 @@ const formatDuration = (segundos: number): string => {
 
   const minutos = Math.floor(segundos / 60);
   const horas = Math.floor(minutos / 60);
-  const segundosRestantes = segundos % 60;
+  const segundosRestantes = Math.floor(segundos % 60);
   const minutosRestantes = minutos % 60;
 
   let resultado = '';
@@ -38,7 +38,7 @@ const TablaInfoSesion: React.FC<Props> = ({ usuarios }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setAhora(Date.now());
-    }, 1000);
+    }, 1000); // Actualiza cada segundo
     return () => clearInterval(interval);
   }, []);
 
