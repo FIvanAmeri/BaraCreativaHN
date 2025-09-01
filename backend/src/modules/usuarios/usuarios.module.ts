@@ -8,11 +8,11 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CloudinaryModule } from '../../modules/cloudinary/cloudinary.module';
 import { SocketModule } from 'src/modules/socket/socket.module';
-import { SesionModule } from '../../modules/sesion/sesion.module';
+import { Sesion } from '../../entidades/sesion.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Usuario]),
+    TypeOrmModule.forFeature([Usuario, Sesion]),
     forwardRef(() => SocketModule),
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -24,7 +24,6 @@ import { SesionModule } from '../../modules/sesion/sesion.module';
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     CloudinaryModule,
-    SesionModule,
   ],
   controllers: [UsuariosController],
   providers: [UsuariosService],
