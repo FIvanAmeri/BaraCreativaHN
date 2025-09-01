@@ -1,23 +1,27 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+// src/controllers/sesion/sesion.controller.ts
+import { Controller, Get, Param, UseGuards, Query } from '@nestjs/common';
 import { SesionService } from '../../services/sesion/sesion.service';
-import { Sesion } from '../../entidades/sesion.entity';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { UsuarioAutenticado } from '../../auth/decoradores/usuario-autenticado.decorator';
-import { Usuario } from '../../entidades/usuario.entity';
+import { Public } from '../../auth/decoradores/public.decorator';
+import { Sesion } from '../../entidades/sesion.entity';
 
 @UseGuards(JwtAuthGuard)
 @Controller('sesion')
 export class SesionController {
   constructor(private readonly sesionService: SesionService) {}
 
+  @Public()
   @Get('ultima')
-  async obtenerUltimaSesion(@UsuarioAutenticado() usuario: Usuario): Promise<Sesion | null> {
-    return this.sesionService.obtenerUltimaSesion(usuario.id);
+  async obtenerUltimaSesion(@Query('usuarioId') usuarioId: string): Promise<Sesion | null> {
+    const id = parseInt(usuarioId, 10);
+    return this.sesionService.obtenerUltimaSesion(id);
   }
 
+  @Public()
   @Get('duracion-total')
-  async obtenerDuracionTotal(@UsuarioAutenticado() usuario: Usuario): Promise<{ duracion: number }> {
-    const duracion = await this.sesionService.obtenerDuracionTotal(usuario.id);
+  async obtenerDuracionTotal(@Query('usuarioId') usuarioId: string): Promise<{ duracion: number }> {
+    const id = parseInt(usuarioId, 10);
+    const duracion = await this.sesionService.obtenerDuracionTotal(id);
     return { duracion };
   }
 }

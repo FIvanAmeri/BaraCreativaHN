@@ -1,3 +1,4 @@
+// src/controllers/auth/auth.controller.ts
 import {
   Controller,
   Post,
@@ -21,7 +22,7 @@ import { SolicitarResetDto } from '../../dto/password/solicitar-reset.dto';
 import { ResetPasswordDto } from '../../dto/password/reset-password.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CreateUsuarioDto } from '../../dto/crear-editar-usuarios/create-usuario.dto';
-import { SesionService } from '../../services/sesion/sesion.service';
+import { SesionService } from '../../services/sesion/sesion.service'; // Asegúrate de importar SesionService
 
 interface UserRequest extends Request {
   user: Usuario;
@@ -33,7 +34,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly usuariosService: UsuariosService,
     private readonly socketGateway: SocketGateway,
-    private readonly sesionService: SesionService,
+    private readonly sesionService: SesionService, // <--- Agregamos SesionService
   ) {}
 
   @Post('registro')
@@ -49,7 +50,6 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async login(@Body() datos: { correoElectronico: string, password: string }, @Res({ passthrough: true }) res: Response) {
     const user = await this.authService.login(datos.correoElectronico, datos.password);
-    const nuevaSesion = await this.sesionService.crearSesion(user.id);
     const token = user.access_token;
     res.cookie('jwt', token, {
       path: '/',
@@ -58,7 +58,15 @@ export class AuthController {
       sameSite: 'none',
       maxAge: 3600000,
     });
-    return { message: 'Login exitoso', sesionId: nuevaSesion.id };
+    // Lógica para iniciar sesión
+    const sesion = await this.sesionService.crearSesion(user.id);
+    res.cookie('sesionId', sesion.id.toString(), {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'none',
+        maxAge: 3600000,
+    });
+    return { message: 'Login exitoso' };
   }
   
   @Get('verificar-correo')
@@ -76,11 +84,13 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  async logout(@Req() req: UserRequest, @Res({ passthrough: true }) res: Response, @Body('sesionId') sesionId: number) {
-    if (!sesionId) {
-      throw new BadRequestException('El ID de la sesión es requerido para el logout.');
+  async logout(@Req() req: UserRequest, @Res({ passthrough: true }) res: Response) {
+    // Lógica para finalizar sesión
+    const sesionId = parseInt(req.cookies.sesionId, 10);
+    if (sesionId) {
+      await this.sesionService.finalizarSesion(sesionId);
     }
-    await this.sesionService.finalizarSesion(sesionId);
+    
     await this.usuariosService.actualizarEstado(req.user.id, false);
     await this.usuariosService.actualizarUltimaSesion(req.user.id, new Date());
     res.clearCookie('jwt', {
@@ -88,6 +98,12 @@ export class AuthController {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'none',
+    });
+    res.clearCookie('sesionId', {
+        path: '/',
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'none',
     });
     const usuarios = await this.usuariosService.findAll();
     this.socketGateway.server.emit('usuariosActualizados', usuarios);
