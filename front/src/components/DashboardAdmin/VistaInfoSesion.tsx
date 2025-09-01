@@ -1,9 +1,9 @@
-// src/components/DashboardAdmin/VistaSesiones/VistaInfoSesion.tsx
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import TablaInfoSesion from './TablaInfoSesion';
 import FiltrosInfoSesion from './FiltrosInfoSesion';
+import { Usuario, TipoUsuario } from '@/app/types/auth';
 
 const debounce = <T extends (...args: unknown[]) => void>(
   func: T,
@@ -15,19 +15,6 @@ const debounce = <T extends (...args: unknown[]) => void>(
     timeout = setTimeout(() => func(...args), delay);
   };
 };
-
-interface Usuario {
-  id: number;
-  nombreCompleto: string;
-  correoElectronico: string;
-  tipoUsuario: string;
-  nombreEmpresa?: string;
-  estadoCuenta: string;
-  estaConectado: boolean;
-  esAdmin: boolean;
-  ultimaSesion?: string;
-  fotoPerfil?: string;
-}
 
 interface UserWithSessionData extends Usuario {
   duracionUltimaSesion?: number;
