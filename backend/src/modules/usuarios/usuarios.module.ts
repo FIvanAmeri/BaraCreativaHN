@@ -7,7 +7,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CloudinaryModule } from '../../modules/cloudinary/cloudinary.module';
-import { SocketModule } from 'src/modules/socket/socket.module'; 
+import { SocketModule } from 'src/modules/socket/socket.module';
+import { SesionModule } from '../../modules/sesion/sesion.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { SocketModule } from 'src/modules/socket/socket.module';
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     CloudinaryModule,
+    SesionModule,
   ],
   controllers: [UsuariosController],
   providers: [UsuariosService],
