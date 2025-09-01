@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Usuario } from '@/app/types/auth';
 
 interface UsuarioConSesion extends Usuario {
@@ -33,7 +33,15 @@ const formatDuration = (segundos: number): string => {
 };
 
 const TablaInfoSesion: React.FC<Props> = ({ usuarios }) => {
-  // Ordena los usuarios por ID de forma ascendente
+  const [ahora, setAhora] = useState(Date.now());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAhora(Date.now());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   const usuariosOrdenados = [...usuarios].sort((a, b) => a.id - b.id);
 
   return (
@@ -62,13 +70,22 @@ const TablaInfoSesion: React.FC<Props> = ({ usuarios }) => {
                     : 'N/A'}
                 </td>
                 <td className="p-2 border-r border-gray-300">
-                  {u.duracionUltimaSesion !== undefined
-                    ? formatDuration(u.duracionUltimaSesion)
+                  {u.ultimaSesion !== undefined
+                    ? formatDuration(
+                        u.estaConectado
+                          ? (ahora - new Date(u.ultimaSesion).getTime()) / 1000
+                          : u.duracionUltimaSesion || 0
+                      )
                     : 'N/A'}
                 </td>
                 <td className="p-2">
                   {u.duracionTotalConectado !== undefined
-                    ? formatDuration(u.duracionTotalConectado)
+                    ? formatDuration(
+                        u.estaConectado && u.ultimaSesion
+                          ? (u.duracionTotalConectado || 0) +
+                              (ahora - new Date(u.ultimaSesion).getTime()) / 1000
+                          : u.duracionTotalConectado || 0
+                      )
                     : 'N/A'}
                 </td>
               </tr>
