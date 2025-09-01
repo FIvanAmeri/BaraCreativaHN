@@ -1,3 +1,4 @@
+// src/modules/auth/auth.module.ts
 import { Module } from '@nestjs/common';
 import { AuthController } from '../../controllers/auth/auth.controller';
 import { JwtStrategy } from '../../auth/estrategias/jwt.strategy';
@@ -10,12 +11,14 @@ import { SocketModule } from '../socket/socket.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Usuario } from '../../entidades/usuario.entity';
 import { MailModule } from '../../mail/mail.module';
+import { SesionModule } from '../sesion/sesion.module'; 
 
 @Module({
   imports: [
     PassportModule,
     UsuariosModule,
     SocketModule,
+    SesionModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

@@ -3,47 +3,54 @@
 import React from 'react';
 
 interface Props {
-  nombreFiltro: string;
-  setNombreFiltro: (valor: string) => void;
-  correoFiltro: string;
-  setCorreoFiltro: (valor: string) => void;
-  onBuscar: () => void;
+  filtro: 'todos' | 'conectados' | 'desconectados';
+  setFiltro: (valor: 'todos' | 'conectados' | 'desconectados') => void;
+  cantidadTotal: number;
+  cantidadConectados: number;
+  cantidadDesconectados: number;
 }
 
 export default function FiltrosUsuarios({
-  nombreFiltro,
-  setNombreFiltro,
-  correoFiltro,
-  setCorreoFiltro,
-  onBuscar
+  filtro,
+  setFiltro,
+  cantidadTotal,
+  cantidadConectados,
+  cantidadDesconectados
 }: Props) {
-  const manejarSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onBuscar();
-  };
-
   return (
-    <form onSubmit={manejarSubmit} className="mb-4 flex gap-3 flex-wrap">
-      <input
-        type="text"
-        placeholder="Filtrar por nombre"
-        value={nombreFiltro}
-        onChange={(e) => setNombreFiltro(e.target.value)}
-        className="px-4 py-2 rounded border border-gray-300 flex-grow"
-      />
-      <input
-        type="text"
-        placeholder="Filtrar por correo"
-        value={correoFiltro}
-        onChange={(e) => setCorreoFiltro(e.target.value)}
-        className="px-4 py-2 rounded border border-gray-300 flex-grow"
-      />
+    <div className="mb-4 flex gap-3 overflow-x-auto flex-nowrap">
       <button
-        type="submit"
-        className="px-6 py-2 bg-blue-500 text-white rounded font-semibold hover:bg-blue-600 transition"
+        onClick={() => setFiltro('todos')}
+        className={`px-4 py-1 rounded font-semibold transition flex-shrink-0 ${
+          filtro === 'todos'
+            ? 'bg-black text-red-400 ring-2 ring-red-400 shadow-lg'
+            : 'bg-gray-200 text-gray-700 hover:bg-red-200'
+        }`}
       >
-        Buscar
+        Todos ({cantidadTotal})
       </button>
-    </form>
+
+      <button
+        onClick={() => setFiltro('conectados')}
+        className={`px-4 py-1 rounded font-semibold transition flex-shrink-0 ${
+          filtro === 'conectados'
+            ? 'bg-black text-red-400 ring-2 ring-red-400 shadow-lg'
+            : 'bg-gray-200 text-gray-700 hover:bg-red-200'
+        }`}
+      >
+        Conectados ({cantidadConectados})
+      </button>
+
+      <button
+        onClick={() => setFiltro('desconectados')}
+        className={`px-4 py-1 rounded font-semibold transition flex-shrink-0 ${
+          filtro === 'desconectados'
+            ? 'bg-black text-red-400 ring-2 ring-red-400 shadow-lg'
+            : 'bg-gray-200 text-gray-700 hover:bg-red-200'
+        }`}
+      >
+        Desconectados ({cantidadDesconectados})
+      </button>
+    </div>
   );
 }

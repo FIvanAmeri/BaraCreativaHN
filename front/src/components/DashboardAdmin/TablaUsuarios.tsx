@@ -45,8 +45,8 @@ const TablaUsuarios: React.FC<Props> = ({ usuarios, onEditar }) => {
           ))}
           {usuarios.length === 0 && (
             <tr>
-              <td colSpan={7} className="text-center p-4 text-gray-500">
-                No hay usuarios para mostrar.
+              <td colSpan={7} className="text-center py-4">
+                No se encontraron usuarios.
               </td>
             </tr>
           )}
