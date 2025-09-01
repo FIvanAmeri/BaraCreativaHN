@@ -121,6 +121,7 @@ export class AuthService {
 
     return {
       access_token: this.jwtService.sign(payload),
+      ...usuario
     };
   }
 
@@ -143,7 +144,7 @@ export class AuthService {
     )}/reset-password/${recoveryCode}`;
 
     user.tokenRecuperacion = recoveryCode;
-    user.expiracionTokenRecuperacion = new Date(Date.now() + 3600000); // 1 hora
+    user.expiracionTokenRecuperacion = new Date(Date.now() + 3600000);
     await this.userRepository.save(user);
 
     try {

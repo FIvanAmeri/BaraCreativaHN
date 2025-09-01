@@ -5,9 +5,10 @@ import MenuAdmin from "@/components/DashboardAdmin/MenuAdmin";
 import VistaUsuarios from "@/components/DashboardAdmin/VistaUsuarios/VistaUsuarios";
 import VistaCursos from "@/components/DashboardAdmin/VistaCursos";
 import AgregarUsuario from "@/components/DashboardAdmin/AgregarUsuario/AgregarUsuario";
+import VistaInfoSesion from "@/components/DashboardAdmin/VistaInfoSesion";
 
 const VistaAdmin: React.FC = () => {
-  const [vista, setVista] = useState<"usuarios" | "cursos" | "agregarUsuario">("usuarios");
+  const [vista, setVista] = useState<"usuarios" | "cursos" | "agregarUsuario" | "infoSesion">("usuarios");
 
   const renderVista = () => {
     switch (vista) {
@@ -17,6 +18,8 @@ const VistaAdmin: React.FC = () => {
         return <VistaCursos />;
       case "agregarUsuario":
         return <AgregarUsuario onUsuarioCreado={() => setVista("usuarios")} />;
+      case "infoSesion": 
+        return <VistaInfoSesion />;
       default:
         return <p>Seleccioná una opción del menú</p>;
     }

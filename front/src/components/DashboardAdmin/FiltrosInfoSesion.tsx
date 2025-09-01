@@ -7,23 +7,16 @@ interface Props {
   setNombreFiltro: (valor: string) => void;
   correoFiltro: string;
   setCorreoFiltro: (valor: string) => void;
-  onBuscar: () => void;
 }
 
-export default function FiltrosUsuarios({
+export default function FiltrosInfoSesion({
   nombreFiltro,
   setNombreFiltro,
   correoFiltro,
   setCorreoFiltro,
-  onBuscar
 }: Props) {
-  const manejarSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onBuscar();
-  };
-
   return (
-    <form onSubmit={manejarSubmit} className="mb-4 flex gap-3 flex-wrap">
+    <div className="mb-4 flex gap-3 flex-wrap">
       <input
         type="text"
         placeholder="Filtrar por nombre"
@@ -38,12 +31,6 @@ export default function FiltrosUsuarios({
         onChange={(e) => setCorreoFiltro(e.target.value)}
         className="px-4 py-2 rounded border border-gray-300 flex-grow"
       />
-      <button
-        type="submit"
-        className="px-6 py-2 bg-blue-500 text-white rounded font-semibold hover:bg-blue-600 transition"
-      >
-        Buscar
-      </button>
-    </form>
+    </div>
   );
 }

@@ -40,58 +40,43 @@ export class UsuariosController {
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  async getMyProfile(@UsuarioAutenticado() usuario: Usuario): Promise<Partial<Usuario>> {
-    this.logger.log(`Petición para el perfil de usuario recibida para: ${usuario.correoElectronico}`);
-    if (!usuario || !usuario.id) {
-      throw new ForbiddenException('No se pudo obtener la información del usuario.');
-    }
-
-    const { password, ...usuarioSinPassword } = usuario;
-    return usuarioSinPassword;
+  async getMyProfile(@UsuarioAutenticado() usuario: Usuario) {
+    return usuario;
   }
 
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
-  async getAll(@UsuarioAutenticado() usuario: Usuario): Promise<Usuario[]> {
-    this.logger.log(`Usuario administrador (${usuario.correoElectronico}) ha accedido a la lista completa de usuarios.`);
-    return this.usuariosService.findAll();
-  }
-
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin')
-  @Get('admin')
-  @HttpCode(HttpStatus.OK)
-  async findAllAdmin(@Request() req): Promise<Usuario[]> {
-    this.logger.log(`Acceso al endpoint de administración por el usuario: ${req.user.correoElectronico}`);
+  async findAll(@Request() req: any): Promise<Usuario[]> {
+    this.logger.log('findAll usuarios, rol: admin');
     return this.usuariosService.findAll();
   }
 
   @Get(':id')
-  async getOne(@Param('id') id: string): Promise<Usuario> {
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  async findOne(@Param('id') id: string): Promise<Usuario | null> {
     const idNum = Number(id);
     if (isNaN(idNum)) {
-      throw new BadRequestException(`ID inválido: ${id}`);
+      throw new BadRequestException('ID de usuario inválido.');
     }
-
-    const usuario = await this.usuariosService.findOne(idNum);
-    if (!usuario) {
-      throw new BadRequestException(`Usuario con ID ${idNum} no encontrado`);
-    }
-    return usuario;
+    return this.usuariosService.findOne(idNum);
   }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(
-    FileInterceptor('fotoPerfil', {
-      fileFilter: (req, file, cb) => {
-        if (file.mimetype.startsWith('image/')) cb(null, true);
-        else cb(new BadRequestException('Solo imágenes permitidas'), false);
-      },
-      limits: { fileSize: 2 * 1024 * 1024 }, 
-    }),
-  )
+  @UseInterceptors(FileInterceptor('foto', {
+    fileFilter: (req, file, cb) => {
+      const allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+      if (allowedMimes.includes(file.mimetype)) {
+        cb(null, true);
+      } else {
+        cb(new BadRequestException('Solo se permiten archivos de imagen (jpeg, png, gif).'), false);
+      }
+    },
+    limits: {
+      fileSize: 10 * 1024 * 1024, // 10MB
+    },
+  }))
   async update(
     @Param('id') id: string,
     @UsuarioAutenticado() usuarioAutenticado: Usuario,
@@ -116,7 +101,6 @@ export class UsuariosController {
       }
     }
 
- 
     if (foto) {
       try {
         this.logger.log(`Subiendo foto de perfil para el usuario con ID: ${idNum}`);
@@ -125,10 +109,22 @@ export class UsuariosController {
         this.logger.log(`Foto de perfil subida con éxito. URL: ${fotoUrl}`);
       } catch (error) {
         this.logger.error(`Error al subir la foto de perfil: ${error.message}`);
-        throw new InternalServerErrorException('Error al subir la foto de perfil a Cloudinary.');
+        throw new InternalServerErrorException('No se pudo subir la foto de perfil.');
       }
     }
-
+    
     return this.usuariosService.update(idNum, usuarioData);
+  }
+
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id') id: string): Promise<void> {
+    const idNum = Number(id);
+    if (isNaN(idNum)) {
+      throw new BadRequestException('ID de usuario inválido.');
+    }
+    await this.usuariosService.remove(idNum);
   }
 }

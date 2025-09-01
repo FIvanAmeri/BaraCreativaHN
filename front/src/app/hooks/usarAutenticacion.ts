@@ -34,6 +34,9 @@ export const useAutenticacion = () => {
       });
 
       if (!respuesta.ok) {
+        // En tu lógica actual, si el token no es válido o expiró, el backend
+        // no devuelve la información y el cliente no la puede obtener.
+        // Aquí no hace falta limpiar localStorage ya que la autenticación es por cookies.
         if (respuesta.status === 401) {
           console.log("¿Que esperas para unirte a Bara Creativa?.");
         } else if (respuesta.status === 404) {
@@ -93,6 +96,9 @@ export const useAutenticacion = () => {
         return false;
       }
 
+      const { sesionId } = await respuesta.json();
+      localStorage.setItem("sesionId", sesionId);
+
       const usuarioLogeado = await obtenerDatosUsuario();
 
       if (usuarioLogeado) {
@@ -111,19 +117,25 @@ export const useAutenticacion = () => {
   };
 
   const cerrarSesion = useCallback(async () => {
+    const sesionId = localStorage.getItem("sesionId");
     try {
       await fetch(`${API_URL}/api/auth/logout`, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         credentials: "include",
+        body: JSON.stringify({ sesionId: sesionId }),
       });
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
+    } finally {
+      localStorage.removeItem("sesionId");
+      setUsuario(null);
+      setMensajeExito(false);
+      router.push("/login");
+      router.refresh();
     }
-
-    setUsuario(null);
-    setMensajeExito(false);
-    router.push("/login");
-    router.refresh();
   }, [router, API_URL]);
 
   useEffect(() => {

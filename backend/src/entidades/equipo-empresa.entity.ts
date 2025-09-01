@@ -3,26 +3,26 @@ import { Usuario } from './usuario.entity';
 import { Curso } from './curso.entity'; 
 
 export enum TipoMiembro {
-  Admin = 'admin',
-  Miembro = 'miembro',
+  Admin = 'admin',
+  Miembro = 'miembro',
 }
 
 @Entity('equipo_empresa')
 export class EquipoEmpresaMiembro {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.equiposEmpresaMiembros, { onDelete: 'CASCADE' })
-  miembro: Usuario;
+  @ManyToOne(() => Usuario, (usuario) => usuario.equiposEmpresaMiembros, { onDelete: 'CASCADE' })
+  usuario: Usuario; 
 
 
-  @ManyToOne(() => Curso, (curso) => curso.equiposEmpresa, { onDelete: 'CASCADE' })
-  curso: Curso; 
+  @ManyToOne(() => Curso, (curso) => curso.equiposEmpresa, { onDelete: 'CASCADE' })
+  curso: Curso; 
 
-  @Column({
-    type: 'enum',
-    enum: TipoMiembro,
-    default: TipoMiembro.Miembro,
-  })
-  tipoMiembro: TipoMiembro;
+  @Column({
+    type: 'enum',
+    enum: TipoMiembro,
+    default: TipoMiembro.Miembro,
+  })
+  tipoMiembro: TipoMiembro;
 }

@@ -21,6 +21,7 @@ import { SolicitarResetDto } from '../../dto/password/solicitar-reset.dto';
 import { ResetPasswordDto } from '../../dto/password/reset-password.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CreateUsuarioDto } from '../../dto/crear-editar-usuarios/create-usuario.dto';
+import { SesionService } from '../../services/sesion/sesion.service';
 
 interface UserRequest extends Request {
   user: Usuario;
@@ -32,6 +33,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly usuariosService: UsuariosService,
     private readonly socketGateway: SocketGateway,
+    private readonly sesionService: SesionService,
   ) {}
 
   @Post('registro')
@@ -47,6 +49,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async login(@Body() datos: { correoElectronico: string, password: string }, @Res({ passthrough: true }) res: Response) {
     const user = await this.authService.login(datos.correoElectronico, datos.password);
+    const nuevaSesion = await this.sesionService.crearSesion(user.id);
     const token = user.access_token;
     res.cookie('jwt', token, {
       path: '/',
@@ -55,7 +58,7 @@ export class AuthController {
       sameSite: 'none',
       maxAge: 3600000,
     });
-    return { message: 'Login exitoso' };
+    return { message: 'Login exitoso', sesionId: nuevaSesion.id };
   }
   
   @Get('verificar-correo')
@@ -73,7 +76,11 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  async logout(@Req() req: UserRequest, @Res({ passthrough: true }) res: Response) {
+  async logout(@Req() req: UserRequest, @Res({ passthrough: true }) res: Response, @Body('sesionId') sesionId: number) {
+    if (!sesionId) {
+      throw new BadRequestException('El ID de la sesión es requerido para el logout.');
+    }
+    await this.sesionService.finalizarSesion(sesionId);
     await this.usuariosService.actualizarEstado(req.user.id, false);
     await this.usuariosService.actualizarUltimaSesion(req.user.id, new Date());
     res.clearCookie('jwt', {

@@ -13,6 +13,7 @@ import { EquipoEmpresaMiembro } from './equipo-empresa.entity';
 import { Inscripcion } from './inscripcion.entity';
 import { Pago } from './pago.entity';
 import { Resena } from './resena.entity';
+import { Sesion } from './sesion.entity';
 
 export enum TipoUsuario {
   Alumno = 'Alumno',
@@ -88,7 +89,6 @@ export class Usuario {
   @Column({ type: 'timestamp', nullable: true })
   expiracionTokenRecuperacion: Date | null;
   
-
   @Column({ type: 'varchar', nullable: true })
   tokenVerificacionCorreo: string | null;
 
@@ -107,11 +107,7 @@ export class Usuario {
   @OneToMany(() => ContactoSoporte, (contacto) => contacto.usuario)
   contactoSoportes: ContactoSoporte[];
 
-  
-  @OneToMany(
-    () => EquipoEmpresaMiembro,
-    (equipoEmpresaMiembro) => equipoEmpresaMiembro.miembro,
-  )
+  @OneToMany(() => EquipoEmpresaMiembro, (equipoMiembro) => equipoMiembro.usuario)
   equiposEmpresaMiembros: EquipoEmpresaMiembro[];
 
   @OneToMany(() => Inscripcion, (inscripcion) => inscripcion.usuario)
@@ -122,4 +118,7 @@ export class Usuario {
 
   @OneToMany(() => Resena, (resena) => resena.usuario)
   resenas: Resena[];
+
+  @OneToMany(() => Sesion, (sesion) => sesion.usuario)
+  sesiones: Sesion[];
 }

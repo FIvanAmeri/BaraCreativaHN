@@ -1,6 +1,6 @@
 import React from 'react';
 import { Curso, ClaseItem } from '@/app/types/curso';
-import toast from 'react-hot-toast'; // Importamos toast para mostrar mensajes
+import toast from 'react-hot-toast'; 
 
 interface Props {
   cursos: Curso[];
@@ -9,15 +9,12 @@ interface Props {
 }
 
 export default function TablaCursosAdmin({ cursos, onEditar, onEliminar }: Props) {
-  // Se usa la variable de entorno para la URL de la base
   const backendBaseUrl = process.env.NEXT_PUBLIC_API_URL;
 
   const handleLaunchScorm = (scormPath: string | null | undefined) => {
     if (scormPath) {
-      // Usamos la variable de entorno para construir la URL del SCORM
       window.open(`${backendBaseUrl}${scormPath}`, '_blank');
     } else {
-      // Reemplazamos alert() con una notificación toast
       toast.error('Este item no tiene un paquete SCORM asociado.');
     }
   };
@@ -76,14 +73,14 @@ export default function TablaCursosAdmin({ cursos, onEditar, onEliminar }: Props
                 >
                   Eliminar
                 </button>
-                {curso.archivoScorm && (
+                {/* {curso.archivoScorm && (
                   <button
                     onClick={() => handleLaunchScorm(curso.archivoScorm)}
                     className="text-blue-600 hover:text-blue-900"
                   >
                     Lanzar SCORM
                   </button>
-                )}
+                )} */}
               </td>
             </tr>
           ))}

@@ -10,11 +10,8 @@ import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { Request } from 'express';
 
-// Define la clave de metadatos para los roles.
 export const ROLES_KEY = 'roles';
 
-// Decorador para establecer los roles permitidos en una ruta.
-// Se usará así: @Roles('admin')
 export const Roles = (...roles: string[]) => {
   return (
     target: object,
@@ -44,7 +41,6 @@ export class RolesGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest<Request>();
-    // Asumimos que el usuario tiene la propiedad esAdmin: boolean
     const user = request.user as { esAdmin: boolean };
 
     if (!user) {

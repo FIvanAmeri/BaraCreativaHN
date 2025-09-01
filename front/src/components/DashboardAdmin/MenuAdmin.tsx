@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface Props {
-  seleccionarVista: (vista: 'usuarios' | 'cursos' | 'agregarUsuario') => void;
+  seleccionarVista: (vista: 'usuarios' | 'cursos' | 'agregarUsuario' | 'infoSesion') => void;
 }
 
 export default function MenuAdmin({ seleccionarVista }: Props) {
@@ -24,6 +24,12 @@ export default function MenuAdmin({ seleccionarVista }: Props) {
         onClick={() => seleccionarVista('agregarUsuario')}
       >
         Agregar nuevo usuario
+      </button>
+      <button
+        className="py-2 px-4 bg-red-500 text-white rounded hover:bg-red-600 flex-shrink-0"
+        onClick={() => seleccionarVista('infoSesion')}
+      >
+        Información de Sesión
       </button>
     </nav>
   );

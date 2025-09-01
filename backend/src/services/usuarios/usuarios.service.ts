@@ -5,7 +5,7 @@ import {
   forwardRef,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Like, FindOptionsWhere } from 'typeorm';
 import { Usuario, TipoUsuario } from '../../entidades/usuario.entity';
 import * as bcrypt from 'bcrypt';
 import { SocketGateway } from '../../socket/socket.gateway';
@@ -27,9 +27,18 @@ export class UsuariosService {
     return await this.usuariosRepository.findOne({ where: { correoElectronico } });
   }
 
+  async findAll(nombre?: string, correoElectronico?: string): Promise<Usuario[]> {
+    const where: FindOptionsWhere<Usuario>[] = [];
+    if (nombre) {
+      where.push({ nombreCompleto: Like(`%${nombre}%`) });
+    }
+    if (correoElectronico) {
+      where.push({ correoElectronico: Like(`%${correoElectronico}%`) });
+    }
+    const queryOptions = where.length > 0 ? { where: where } : {};
 
-  async findAll(): Promise<Usuario[]> {
     return this.usuariosRepository.find({
+      ...queryOptions,
       select: {
         id: true,
         nombreCompleto: true,
@@ -42,6 +51,9 @@ export class UsuariosService {
         ultimaSesion: true,
         fotoPerfil: true, 
       },
+      order: {
+        id: 'ASC'
+      }
     });
   }
 
@@ -102,18 +114,10 @@ export class UsuariosService {
     });
   }
 
-  /**
-   * @description Updates the last session date for a user.
-   * @param id The user ID.
-   * @param fecha The date and time of the last session.
-   */
   async actualizarUltimaSesion(id: number, fecha: Date): Promise<void> {
     await this.usuariosRepository.update(id, { ultimaSesion: fecha });
   }
 
-  /**
-   * @description Gets the complete list of users and emits it via WebSockets.
-   */
   async notificarActualizacionEstado(): Promise<void> {
     const usuarios = await this.findAll();
     this.socketGateway.server.emit('usuariosActualizados', usuarios);
